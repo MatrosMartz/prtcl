@@ -13,7 +13,7 @@ your own implementation of these methods.
 ## Quick Start
 
 <details>
-<sumary> Deno </sumary>
+<summary> Deno </summary>
 
 ```bash
 deno add @prtcl/prtcl
