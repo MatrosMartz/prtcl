@@ -2,6 +2,8 @@
 
 <!--toc:start-->
 
+## Table of Contents
+
 - [Flat](#flat)
   - [Overview](#overview)
     - [Symbol](#symbol)

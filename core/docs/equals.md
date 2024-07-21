@@ -2,6 +2,8 @@
 
 <!--toc:start-->
 
+## Table of Contents
+
 - [Equals](#equals)
   - [Overview](#overview)
     - [Symbol](#symbol)

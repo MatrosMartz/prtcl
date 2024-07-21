@@ -2,14 +2,16 @@
 
 <!--toc:start-->
 
+## Table of Contents
+
 - [Read-only clone](#read-only-clone)
   - [Overview](#overview)
     - [Symbol](#symbol)
     - [Definition](#definition)
     - [Guard](#guard)
     - [Type Assertion](#type-assertion)
-  - [Default Method](#default-method)
-    - [Clone Implementations](#clone-implementations)
+    - [Default Method](#default-method)
+  - [Clone Implementations](#clone-implementations)
     - [Clone Interface](#clone-interface)
     - [Clone Abstract Class](#clone-abstract-class)
     - [Base Class](#base-class)

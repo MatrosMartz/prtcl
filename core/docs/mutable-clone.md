@@ -2,6 +2,8 @@
 
 <!--toc:start-->
 
+## Table of Contents
+
 - [Mutable Clone](#mutable-clone)
   - [Overview](#overview)
     - [Symbol](#symbol)

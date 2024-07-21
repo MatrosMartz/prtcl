@@ -2,6 +2,8 @@
 
 <!--toc:start-->
 
+## Table of Contents
+
 - [Clone](#clone)
   - [Overview](#overview)
     - [Symbol](#symbol)
