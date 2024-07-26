@@ -18,6 +18,9 @@
     "./methods": "./src/methods.ts",
     "./types": "./src/types.ts"
   },
+  "imports": {
+    "test:utils": "./test/utils.ts"
+  },
   "fmt": {
     "useTabs": true,
     "lineWidth": 120,

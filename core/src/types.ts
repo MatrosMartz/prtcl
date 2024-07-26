@@ -2,14 +2,14 @@ import type { Primitives } from './native/mod.ts'
 
 /** Flat object type, only allows as values the same, plain array or primitives. */
 export type FlatRecord = {
-	readonly [k: PropertyKey]: FlatData
+	readonly [key: string | number]: FlatData
 }
 
 /** Flat array type, only allows as values the same, plain record or primitives. */
 export type FlatArray = ReadonlyArray<FlatData>
 
 /** Flat object or Primitives. */
-export type FlatData = FlatArray | FlatArray | Primitives
+export type FlatData = FlatArray | FlatRecord | Primitives
 
 /** Type cloning. */
 export type cloneHint = 'shallow' | 'deep'
