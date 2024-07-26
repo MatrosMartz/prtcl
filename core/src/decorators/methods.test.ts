@@ -1,246 +1,245 @@
-import { assert, assertEquals, assertInstanceOf, assertObjectMatch } from 'jsr:@std/assert'
+import { assert, assertEquals, assertInstanceOf } from 'jsr:@std/assert'
+import { describe, test } from 'jsr:@std/testing/bdd'
 import { useCompareTo, useEqualsTo, useToClone, useToFlat, useToMutableClone, useToReadonlyClone } from './methods.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 import type * as Extend from '../extend.ts'
 
-Deno.test('Methods decorators', async (t) => {
-	await t.step('useToClone decorator', async (t) => {
-		class Foo<T> {
-			value: T
-			constructor(value: T) {
-				this.value = value
-			}
-
-			@useToClone
-			toClone() {
-				return new Foo(this.value)
-			}
+describe('useToClone decorator', () => {
+	class Foo<T> {
+		value: T
+		constructor(value: T) {
+			this.value = value
 		}
 
-		const foo = new Foo('foo')
+		@useToClone
+		toClone() {
+			return new Foo(this.value)
+		}
+	}
 
-		await t.step('Should return true if foo implements clone protocol', () => {
-			assert(Prtcl.impl('clone', foo))
-		})
+	const foo = new Foo('foo')
 
-		await t.step('Should be match if both object are equals', () => {
-			const copy = (foo as Extend.Clone<Foo<string>>)[Prtcl.toClone]()
-			assertObjectMatch(copy, foo as never)
-		})
+	test('Should return true if foo implements clone protocol', () => {
+		assert(Prtcl.impl('clone', foo))
 	})
 
-	await t.step('useCompareTo decorator', async (t) => {
-		class Foo {
-			value: number
-			constructor(value: number) {
-				this.value = value
-			}
+	test('Should be match if both object are equals', () => {
+		const copy = (foo as Extend.Clone<Foo<string>>)[Prtcl.toClone]()
+		assertEquals(copy, foo)
+	})
+})
 
-			@useCompareTo
-			compareTo(other: Foo) {
-				return this.value - other.value
-			}
+describe('useCompareTo decorator', () => {
+	class Foo {
+		value: number
+		constructor(value: number) {
+			this.value = value
 		}
 
-		const foo = new Foo(12)
+		@useCompareTo
+		compareTo(other: Foo) {
+			return this.value - other.value
+		}
+	}
 
-		await t.step('Should return true if foo implements compare protocol', () => {
-			assert(Prtcl.impl('compare', foo))
-		})
+	const foo = new Foo(12)
 
-		await t.step('Should return diference in to both object', () => {
-			const otherFoo = new Foo(34)
-
-			assertEquals((foo as Extend.Compare<Foo, unknown>)[Prtcl.compareTo](otherFoo), -22)
-		})
+	test('Should return true if foo implements compare protocol', () => {
+		assert(Prtcl.impl('compare', foo))
 	})
 
-	await t.step('useEqualsTo decorator', async (t) => {
-		class Foo<T> {
-			value: T
-			constructor(value: T) {
-				this.value = value
-			}
+	test('Should return diference in to both object', () => {
+		const otherFoo = new Foo(34)
 
-			@useEqualsTo
-			equalsTo(other: unknown) {
-				return other instanceof Foo && other.value === this.value
-			}
+		assertEquals((foo as Extend.Compare<Foo, unknown>)[Prtcl.compareTo](otherFoo), -22)
+	})
+})
+
+describe('useEqualsTo decorator', () => {
+	class Foo<T> {
+		value: T
+		constructor(value: T) {
+			this.value = value
 		}
 
-		const foo = new Foo('foo')
+		@useEqualsTo
+		equalsTo(other: unknown) {
+			return other instanceof Foo && other.value === this.value
+		}
+	}
 
-		await t.step('Should return true if foo implements equals protocol', () => {
-			assert(Prtcl.impl('equals', foo))
-		})
+	const foo = new Foo('foo')
 
-		await t.step('Should comarate with object and return true', () => {
-			const otherFoo = new Foo('foo')
-			assert((foo as Extend.Equals<Foo<string>>)[Prtcl.equalsTo](otherFoo))
-		})
+	test('Should return true if foo implements equals protocol', () => {
+		assert(Prtcl.impl('equals', foo))
 	})
 
-	await t.step('useToUnwrap decorator', async (t) => {
-		class Foo<T> {
-			value: T
-			constructor(value: T) {
-				this.value = value
-			}
+	test('Should comarate with object and return true', () => {
+		const otherFoo = new Foo('foo')
+		assert((foo as Extend.Equals<Foo<string>>)[Prtcl.equalsTo](otherFoo))
+	})
+})
 
-			@useToFlat
-			toUnwrap() {
-				return this.value
-			}
+describe('useToUnwrap decorator', () => {
+	class Foo<T> {
+		value: T
+		constructor(value: T) {
+			this.value = value
 		}
 
-		const foo = new Foo('foo')
+		@useToFlat
+		toUnwrap() {
+			return this.value
+		}
+	}
 
-		await t.step('Should return true if foo implements unwrap protocol', () => {
-			assert(Prtcl.impl('flat', foo))
-		})
+	const foo = new Foo('foo')
 
-		await t.step('Should return unwrap data of foo', () => {
-			assertEquals((foo as Extend.Flat<Foo<string>, string>)[Prtcl.toFlat](), 'foo')
-		})
+	test('Should return true if foo implements unwrap protocol', () => {
+		assert(Prtcl.impl('flat', foo))
 	})
 
-	await t.step('useToMutable decorator', async (t) => {
-		class MutableList<T> {
-			#list: T[]
+	test('Should return unwrap data of foo', () => {
+		assertEquals((foo as Extend.Flat<Foo<string>, string>)[Prtcl.toFlat](), 'foo')
+	})
+})
 
-			constructor(list: readonly T[]) {
-				this.#list = [...list]
-			}
+describe('useToMutable decorator', () => {
+	class MutableList<T> {
+		#list: T[]
 
-			get list() {
-				return [...this.#list]
-			}
-
-			get fisrtItem() {
-				return this.#list[0]
-			}
-
-			get lastItem() {
-				return this.#list[this.#list.length - 1]
-			}
-
-			add(item: T) {
-				this.#list.push(item)
-			}
-
-			remove(item: T) {
-				this.#list = this.#list.filter((it) => it !== item)
-			}
+		constructor(list: readonly T[]) {
+			this.#list = [...list]
 		}
 
-		class ReadonlyList<T> {
-			readonly #list: readonly T[]
-
-			constructor(list: readonly T[]) {
-				this.#list = Object.freeze([...list])
-			}
-
-			get list() {
-				return Object.freeze([...this.#list])
-			}
-
-			get fisrtItem() {
-				return this.#list[0]
-			}
-
-			get lastItem() {
-				return this.#list[this.#list.length - 1]
-			}
-
-			@useToMutableClone
-			toMutableClone() {
-				return new MutableList(this.#list)
-			}
+		get list() {
+			return [...this.#list]
 		}
 
-		const list = new ReadonlyList(['foo', 'bar'])
+		get fisrtItem() {
+			return this.#list[0]
+		}
 
-		await t.step('Should return true if list implements readonlyClone protocol', () => {
-			assert(Prtcl.impl('mutableClone', list))
-		})
+		get lastItem() {
+			return this.#list[this.#list.length - 1]
+		}
 
-		await t.step('Should return readonly clone', () => {
-			const mutableCopyList = (list as Extend.MutableClone<ReadonlyList<string>, MutableList<string>>)
-				[Prtcl.toMutableClone]()
-			const mutableList = new MutableList(['foo', 'bar'])
+		add(item: T) {
+			this.#list.push(item)
+		}
 
-			assertInstanceOf(mutableCopyList, MutableList)
-			assertObjectMatch(mutableList, mutableCopyList as never)
-		})
+		remove(item: T) {
+			this.#list = this.#list.filter((it) => it !== item)
+		}
+	}
+
+	class ReadonlyList<T> {
+		readonly #list: readonly T[]
+
+		constructor(list: readonly T[]) {
+			this.#list = Object.freeze([...list])
+		}
+
+		get list() {
+			return Object.freeze([...this.#list])
+		}
+
+		get fisrtItem() {
+			return this.#list[0]
+		}
+
+		get lastItem() {
+			return this.#list[this.#list.length - 1]
+		}
+
+		@useToMutableClone
+		toMutableClone() {
+			return new MutableList(this.#list)
+		}
+	}
+
+	const list = new ReadonlyList(['foo', 'bar'])
+
+	test('Should return true if list implements readonlyClone protocol', () => {
+		assert(Prtcl.impl('mutableClone', list))
 	})
 
-	await t.step('useToReadonly decorator', async (t) => {
-		class ReadonlyList<T> {
-			readonly #list: readonly T[]
+	test('Should return readonly clone', () => {
+		const mutableCopyList = (list as Extend.MutableClone<ReadonlyList<string>, MutableList<string>>)
+			[Prtcl.toMutableClone]()
+		const mutableList = new MutableList(['foo', 'bar'])
 
-			constructor(list: readonly T[]) {
-				this.#list = Object.freeze([...list])
-			}
+		assertInstanceOf(mutableCopyList, MutableList)
+		assertEquals(mutableList, mutableCopyList)
+	})
+})
 
-			get list() {
-				return Object.freeze([...this.#list])
-			}
+describe('useToReadonly decorator', () => {
+	class ReadonlyList<T> {
+		readonly #list: readonly T[]
 
-			get fisrtItem() {
-				return this.#list[0]
-			}
-
-			get lastItem() {
-				return this.#list[this.#list.length - 1]
-			}
+		constructor(list: readonly T[]) {
+			this.#list = Object.freeze([...list])
 		}
 
-		class MutableList<T> {
-			#list: T[]
-
-			constructor(list: readonly T[]) {
-				this.#list = [...list]
-			}
-
-			get list() {
-				return [...this.#list]
-			}
-
-			get fisrtItem() {
-				return this.#list[0]
-			}
-
-			get lastItem() {
-				return this.#list[this.#list.length - 1]
-			}
-
-			add(item: T) {
-				this.#list.push(item)
-			}
-
-			remove(item: T) {
-				this.#list = this.#list.filter((it) => it !== item)
-			}
-
-			@useToReadonlyClone
-			toReadonlyClone() {
-				return new ReadonlyList(this.#list)
-			}
+		get list() {
+			return Object.freeze([...this.#list])
 		}
 
-		const list = new MutableList(['foo', 'bar'])
+		get fisrtItem() {
+			return this.#list[0]
+		}
 
-		await t.step('Should return true if list implements readonlyClone protocol', () => {
-			assert(Prtcl.impl('readonlyClone', list))
-		})
+		get lastItem() {
+			return this.#list[this.#list.length - 1]
+		}
+	}
 
-		await t.step('Should return readonly clone', () => {
-			const readonlyCopyList = (list as Extend.ReadonlyClone<MutableList<string>, ReadonlyList<string>>)
-				[Prtcl.toReadonlyClone]()
-			const readonlyList = new ReadonlyList(['foo', 'bar'])
+	class MutableList<T> {
+		#list: T[]
 
-			assertInstanceOf(readonlyCopyList, ReadonlyList)
-			assertObjectMatch(readonlyList, readonlyCopyList as never)
-		})
+		constructor(list: readonly T[]) {
+			this.#list = [...list]
+		}
+
+		get list() {
+			return [...this.#list]
+		}
+
+		get fisrtItem() {
+			return this.#list[0]
+		}
+
+		get lastItem() {
+			return this.#list[this.#list.length - 1]
+		}
+
+		add(item: T) {
+			this.#list.push(item)
+		}
+
+		remove(item: T) {
+			this.#list = this.#list.filter((it) => it !== item)
+		}
+
+		@useToReadonlyClone
+		toReadonlyClone() {
+			return new ReadonlyList(this.#list)
+		}
+	}
+
+	const list = new MutableList(['foo', 'bar'])
+
+	test('Should return true if list implements readonlyClone protocol', () => {
+		assert(Prtcl.impl('readonlyClone', list))
+	})
+
+	test('Should return readonly clone', () => {
+		const readonlyCopyList = (list as Extend.ReadonlyClone<MutableList<string>, ReadonlyList<string>>)
+			[Prtcl.toReadonlyClone]()
+		const readonlyList = new ReadonlyList(['foo', 'bar'])
+
+		assertInstanceOf(readonlyCopyList, ReadonlyList)
+		assertEquals(readonlyList, readonlyCopyList)
 	})
 })
