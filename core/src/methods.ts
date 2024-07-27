@@ -144,6 +144,8 @@ export function defaultFlat(this: object): FlatData {
 
 		if (flatParent == null) throw new Error('FlatParent not defined')
 
+		if (Reflect.has(flatParent, key)) continue
+
 		let flatValue: FlatData
 
 		if (typeof value === 'object' && value != null) {
