@@ -257,6 +257,35 @@ describe('defaultFlat', () => {
 
 		assertEquals(defaultFlat.call(jsonParseable), { value: 'foo' })
 	})
+
+	describe('Unwrap Primivites objects', () => {
+		test('Should return string if called by String object', () => {
+			const str = Object('foo')
+
+			assertEquals(defaultFlat.call(str), 'foo')
+			assertEquals(defaultFlat.call({ str }), { str: 'foo' })
+		})
+		test('Should return string if called by Boolean object', () => {
+			const bool = Object(false)
+			assertEquals(defaultFlat.call(bool), false)
+			assertEquals(defaultFlat.call({ bool }), { bool: false })
+		})
+		test('Should return string if called by Number object', () => {
+			const num = Object(123)
+			assertEquals(defaultFlat.call(num), 123)
+			assertEquals(defaultFlat.call({ num }), { num: 123 })
+		})
+		test('Should return string if called by Symbol object', () => {
+			const sym = Object(Symbol.for('test.sym'))
+			assertEquals(defaultFlat.call(sym), Symbol.for('test.sym'))
+			assertEquals(defaultFlat.call({ sym }), { sym: Symbol.for('test.sym') })
+		})
+		test('Should return string if called by BigInt object', () => {
+			const int = Object(456n)
+			assertEquals(defaultFlat.call(int), 456n)
+			assertEquals(defaultFlat.call({ int }), { int: 456n })
+		})
+	})
 })
 
 describe('defaultMutableClone', () => {

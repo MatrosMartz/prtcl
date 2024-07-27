@@ -21,6 +21,11 @@ export function toObject(value: NonNullable<unknown>): object {
 export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
 	return typeof value === 'object'
 }
+const primitiveWrappers = [Boolean, BigInt, Number, String, Symbol] as const
+// deno-lint-ignore ban-types
+export function isPrimitiveWraper(value: object): value is Boolean | BigInt | Number | String | Symbol {
+	return primitiveWrappers.some((Wraper) => value instanceof Wraper)
+}
 
 function isIterable(value: object): value is object & Iterable<unknown> {
 	return Symbol.iterator in value

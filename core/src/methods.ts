@@ -1,7 +1,7 @@
 import type { Primitives } from './native/types.ts'
 import type { FlatArray, FlatData, FlatRecord, Mutable } from './types.ts'
 import * as Prtcl from './prtcl/mod.ts'
-import { createFlatOutPut, getItemsStack } from './utils.ts'
+import { createFlatOutPut, getItemsStack, isPrimitiveWraper } from './utils.ts'
 
 /**
  * Default implementation of the `Prtcl.toClone` method.
@@ -122,6 +122,7 @@ export function defaultEquals(this: object, other: unknown): boolean {
  */
 export function defaultFlat(this: object): FlatData {
 	if (typeof this === 'function') return undefined
+	if (isPrimitiveWraper(this)) return this.valueOf()
 	if (Prtcl.toFlat in this && typeof this[Prtcl.toFlat] === 'function' && defaultFlat !== this[Prtcl.toFlat]) {
 		return this[Prtcl.toFlat]()
 	}
@@ -146,7 +147,11 @@ export function defaultFlat(this: object): FlatData {
 		let flatValue: FlatData
 
 		if (typeof value === 'object' && value != null) {
-			if (Prtcl.toFlat in value && typeof value[Prtcl.toFlat] === 'function' && defaultFlat !== value[Prtcl.toFlat]) {
+			if (isPrimitiveWraper(value)) {
+				flatValue = value.valueOf()
+			} else if (
+				Prtcl.toFlat in value && typeof value[Prtcl.toFlat] === 'function' && defaultFlat !== value[Prtcl.toFlat]
+			) {
 				flatValue = value[Prtcl.toFlat]()
 			} else if ('toJSON' in value && typeof value.toJSON === 'function' && defaultFlat != value.toJSON) {
 				flatValue = value.toJSON()
