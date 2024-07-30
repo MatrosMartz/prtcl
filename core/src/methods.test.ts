@@ -5,9 +5,12 @@ import {
 	assertGreater,
 	assertInstanceOf,
 	assertLess,
+	assertNotStrictEquals,
 	assertThrows,
 } from 'jsr:@std/assert'
 import { describe, test } from 'jsr:@std/testing/bdd'
+import { assertSpyCall, assertSpyCalls, spy } from 'jsr:@std/testing/mock'
+
 import {
 	defaultClone,
 	defaultCompare,
@@ -17,6 +20,7 @@ import {
 	defaultReadonlyClone,
 } from './methods.ts'
 import { getRandomInt, getRandomPrimitive } from 'test:utils'
+
 import type { FlatData } from './types.ts'
 import * as Prtcl from './prtcl/mod.ts'
 
@@ -32,14 +36,14 @@ describe('defaultClone', () => {
 		assertEquals(obj, defaultClone.call(obj))
 	})
 
-	test('Should clone array', () => {
+	test('Should return clone array', () => {
 		const arr = [1, 2, 3]
 
 		assertEquals(arr, defaultClone.call(arr))
 		assert(Array.isArray(arr))
 	})
 
-	test('Should clone class instance', () => {
+	test('Should return clone class instance', () => {
 		class Foo<T> {
 			value: T
 			constructor(value: T) {
@@ -54,6 +58,85 @@ describe('defaultClone', () => {
 		assertEquals(foo, fooClone)
 		assertInstanceOf(fooClone, Foo)
 	})
+
+	test('Should return the function that call him', () => {
+		const func = () => 'foo'
+		const clone = defaultClone.call(func)
+
+		assertEquals(func, clone)
+	})
+
+	test('Should return readonly clone', () => {
+		const obj = Object.freeze({ foo: 'foo' })
+		const clone = defaultClone.call(obj)
+
+		assert(Object.isFrozen(clone))
+	})
+
+	test('Should return deep clone', () => {
+		const obj = Object.freeze({ foo: { bar: Object.freeze({ baz: 'baz' }), quux: 'quux' }, quuz: 'quuz' })
+		const deepClone = defaultClone.call(obj, 'deep') as typeof obj
+
+		assertEquals(deepClone, obj)
+		assertNotStrictEquals(deepClone, obj)
+		assertNotStrictEquals(deepClone.foo, obj.foo)
+		assertNotStrictEquals(deepClone.foo.bar, obj.foo.bar)
+	})
+
+	test('Should return readonly clone if original is frozen', () => {
+		const obj = Object.freeze({ foo: { bar: Object.freeze({ baz: 'baz' }), quux: 'quux' }, quuz: 'quuz' })
+		const deepClone = defaultClone.call(obj, 'deep') as typeof obj
+
+		assert(Object.isFrozen(deepClone))
+		assert(!Object.isFrozen(deepClone.foo))
+		assert(Object.isFrozen(deepClone.foo.bar))
+	})
+
+	// test('Should called Prtcl.toClone method', () => {
+	// 	const obj1 = {
+	// 		[Prtcl.toClone]: spy((): object => ({ ...obj1 })),
+	// 		value: 'foo',
+	// 	}
+	// 	const clone1 = defaultClone.call(obj1) as typeof obj1
+	//
+	// 	assertEquals(obj1, clone1)
+	// 	assertSpyCalls(obj1[Prtcl.toClone], 1)
+	// 	assertSpyCall(obj1[Prtcl.toClone], 0, { args: ['default'] })
+	//
+	// 	const obj2 = {
+	// 		foo: 'foo',
+	// 		bar: {
+	// 			[Prtcl.toClone]: spy((): object => ({ ...obj2.bar })),
+	// 			value: 'bar',
+	// 		},
+	// 	}
+	// 	const clone2 = defaultClone.call(obj2, 'deep') as typeof obj2
+	//
+	// 	assertEquals(obj2, clone2)
+	// 	assertSpyCalls(obj2.bar[Prtcl.toClone], 1)
+	// 	assertSpyCall(obj2.bar[Prtcl.toClone], 0, { args: ['deep'] })
+	// })
+	//
+	// test('Should ignore Prtcl.toClone method if they are the same function `defaultFlat`', () => {
+	// 	const obj1 = {
+	// 		[Prtcl.toClone]: defaultClone,
+	// 		value: 'foo',
+	// 	}
+	// 	const clone1 = defaultClone.call(obj1) as typeof obj1
+	//
+	// 	assertEquals(obj1, clone1)
+	//
+	// 	const obj2 = {
+	// 		foo: 'foo',
+	// 		bar: {
+	// 			[Prtcl.toClone]: defaultClone,
+	// 			value: 'bar',
+	// 		},
+	// 	}
+	// 	const clone2 = defaultClone.call(obj2, 'deep') as typeof obj2
+	//
+	// 	assertEquals(obj2, clone2)
+	// })
 })
 
 describe('defaultCompare', () => {
@@ -295,13 +378,45 @@ describe('defaultMutableClone', () => {
 		assertEquals(defaultMutableClone.call(readonlyObj), {})
 	})
 
+	test('Should return the function that call him', () => {
+		const func = () => 'foo'
+		const clone = defaultMutableClone.call(func)
+
+		assertEquals(func, clone)
+	})
+	test('Should return clone', () => {
+		const readonlyObj = Object.freeze({ foo: 'foo' })
+		const clone = defaultMutableClone.call(readonlyObj) as Record<string, unknown>
+
+		clone.foo = 'bar'
+		clone.baz = 'baz'
+
+		assertEquals(readonlyObj, { foo: 'foo' })
+		assertEquals(clone, { foo: 'bar', baz: 'baz' })
+	})
+
 	test('Should return mutable clone', () => {
 		const readonlyObj = Object.freeze({})
 		const clone = defaultMutableClone.call(readonlyObj) as Record<string, unknown>
 
-		clone['foo'] = 'bar'
+		clone.foo = 'bar'
 
 		assertEquals(clone, { foo: 'bar' })
+		assertEquals(readonlyObj, {})
+	})
+
+	test('Should return deep mutable clone', () => {
+		const readonlyObj = Object.freeze({ foo: { bar: { baz: 'baz' }, quux: 'quux' }, quuz: 'quuz' })
+		const deepclone = defaultMutableClone.call(readonlyObj, 'deep') as Record<
+			string,
+			unknown
+		>
+
+		deepclone.quuz = 'edited'
+		;(deepclone.foo as Record<string, Record<string, unknown>>).bar.baz = 'edited'
+
+		assertEquals(deepclone, { foo: { bar: { baz: 'edited' }, quux: 'quux' }, quuz: 'edited' })
+		assertEquals(readonlyObj, { foo: { bar: { baz: 'baz' }, quux: 'quux' }, quuz: 'quuz' })
 	})
 })
 
@@ -312,13 +427,54 @@ describe('defaultReadonlyClone', () => {
 		assertEquals(defaultReadonlyClone.call(mutableObj), {})
 	})
 
+	test('Should return the function that call him', () => {
+		const func = () => 'foo'
+		const clone = defaultMutableClone.call(func)
+
+		assertEquals(func, clone)
+	})
+	test('Should return clone', () => {
+		const mutableObj: Record<string, string> = { foo: 'foo' }
+		const clone = defaultReadonlyClone.call(mutableObj)
+
+		mutableObj.foo = 'bar'
+		mutableObj.baz = 'baz'
+
+		assertEquals(clone, { foo: 'foo' })
+	})
+
 	test('Should return readonly clone', () => {
 		const mutableObj = {}
 		const clone = defaultReadonlyClone.call(mutableObj) as Readonly<Record<string, unknown>>
 
 		assertThrows(() => {
 			// @ts-expect-error: This throws
-			clone['foo'] = 'bar'
+			clone.foo = 'bar'
+		})
+	})
+
+	test('Should return deep clone', () => {
+		const mutableObj = { foo: { bar: { baz: 'baz' }, quux: 'quux' }, quuz: 'quuz' }
+		const deepclone = defaultReadonlyClone.call(mutableObj, 'deep')
+
+		mutableObj.quuz = 'edited'
+		mutableObj.foo.bar.baz = 'edited'
+
+		assertEquals(deepclone, { foo: { bar: { baz: 'baz' }, quux: 'quux' }, quuz: 'quuz' })
+	})
+
+	test('Should return readonly deep clone', () => {
+		const mutableObj = { foo: { bar: { baz: 'baz' }, quux: 'quux' }, quuz: 'quux' }
+		const deepclone = defaultReadonlyClone.call(mutableObj, 'deep') as Readonly<Record<string, unknown>>
+
+		assertThrows(() => {
+			// @ts-expect-error: This throws
+			deepclone.quuz = 'edited'
+		})
+
+		assertThrows(() => {
+			// @ts-expect-error: This throws
+			deepclone.foo.bar.baz = 'edited'
 		})
 	})
 })

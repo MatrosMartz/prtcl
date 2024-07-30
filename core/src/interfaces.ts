@@ -1,5 +1,5 @@
 import type * as Prtcl from './prtcl/mod.ts'
-import type { FlatData } from './types.ts'
+import type { CloneHint, FlatData } from './types.ts'
 import type {
 	// deno-lint-ignore no-unused-vars
 	BaseClonable,
@@ -19,8 +19,8 @@ import type {
  * @example
  * ```typescript
  * class Foo implements IClone<Foo> {
- *   [Prtc.toClone]() {
- *     return new Foo();
+ *   [Prtc.toClone](hint: CloneHint) {
+ *     return new Foo()hint: ;
  *   }
  * }
  *
@@ -31,7 +31,7 @@ import type {
  * @see {@link BaseClonable} for basic implementation.
  */
 export interface IClone<Clone> {
-	[Prtcl.toClone](): Clone
+	[Prtcl.toClone](hint: CloneHint): Clone
 }
 
 /**
@@ -113,7 +113,7 @@ export interface IFlat<Data extends FlatData> {
  *    this.value = value;
  *   }
  *
- *   [Ptrcl.toMutableClone]() {
+ *   [Ptrcl.toMutableClone](hint: CloneHint) {
  *     return new MutableFoo(this.value);
  *   }
  * }
@@ -133,7 +133,7 @@ export interface IFlat<Data extends FlatData> {
  * @see {@link BaseMutableClonable} for basic implementation.
  */
 export interface IMutableClone<MutableClone> {
-	[Prtcl.toMutableClone](): MutableClone
+	[Prtcl.toMutableClone](hint: CloneHint): MutableClone
 }
 
 /**
@@ -148,7 +148,7 @@ export interface IMutableClone<MutableClone> {
  *     this.value = value;
  *   }
  *
- *   [Prtcl.toReadonlyClone]() {
+ *   [Prtcl.toReadonlyClone](hint: CloneHint) {
  *     return new ReadonlyFoo(this.value);
  *   }
  * }
@@ -168,7 +168,7 @@ export interface IMutableClone<MutableClone> {
  * @see {@link BaseReadonlyClonable} for basic implementation.
  */
 export interface IReadonlyClone<ReadonlyClone> {
-	[Prtcl.toReadonlyClone](): ReadonlyClone
+	[Prtcl.toReadonlyClone](hint: CloneHint): ReadonlyClone
 }
 
 // TODO: export interface ISerialize {

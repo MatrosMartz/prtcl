@@ -12,7 +12,7 @@ export type FlatArray = ReadonlyArray<FlatData>
 export type FlatData = FlatArray | FlatRecord | Primitives
 
 /** Type cloning. */
-export type cloneHint = 'shallow' | 'deep'
+export type CloneHint = 'deep' | 'default' | 'shallow'
 
 /** Contrary to the type `Readonly`. */
 export type Mutable<T> = { -readonly [k in keyof T]: T[k] }

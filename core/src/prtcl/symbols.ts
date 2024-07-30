@@ -4,7 +4,7 @@
  * ```typescript
  * const foo = {
  *   value: 'foo',
- *   [Prtcl.toClone]() {
+ *   [Prtcl.toClone](hint: CloneHint) {
  *     return { ...this };
  *   }
  * };
@@ -68,7 +68,7 @@ export const toFlat = Symbol('toFlat')
  * ```typescript
  * const foo = Object.freeze({
  *   value: 'foo',
- *   [Prtcl.toMutableClone]() {
+ *   [Prtcl.toMutableClone](hint: CloneHint) {
  *     return { ...this };
  *   }
  * });
@@ -84,7 +84,7 @@ export const toMutableClone = Symbol('Prtcl.toMutableClone')
  * ```typescript
  * const foo = {
  *   value: 'foo',
- *   [Prtcl.toReadonlyClone]() {
+ *   [Prtcl.toReadonlyClone](hint: CloneHint) {
  *     return Object.freeze({ ...this });
  *   }
  * };

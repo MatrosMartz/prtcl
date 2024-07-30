@@ -1,7 +1,7 @@
 import type { Primitives } from './native/types.ts'
-import type { FlatArray, FlatData, FlatRecord, Mutable } from './types.ts'
+import type { CloneHint, FlatData, Mutable } from './types.ts'
 import * as Prtcl from './prtcl/mod.ts'
-import { createFlatOutPut, getItemsStack, isPrimitiveWraper } from './utils.ts'
+import { createCopyOutPut, createFlatOutPut, getCopyItemsStack, getFlatItemsStack, isPrimitiveWraper } from './utils.ts'
 
 /**
  * Default implementation of the `Prtcl.toClone` method.
@@ -20,9 +20,44 @@ import { createFlatOutPut, getItemsStack, isPrimitiveWraper } from './utils.ts'
  * console.log(foo1 === foo2); // false
  * ```
  */
-export function defaultClone<T extends object>(this: T): T {
+export function defaultClone<T extends object>(this: T, hint: CloneHint = 'default'): T {
+	if (typeof this === 'function') return this
 	if (this == null || typeof this !== 'object') throw new Error('defaultClone can not be called in a primitive')
-	return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+	if (hint !== 'deep') {
+		const result = Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+		if (Object.isFrozen(this)) Object.freeze(result)
+		return result
+	}
+
+	const result = Object.create(Object.getPrototypeOf(this)) as object
+	const visited = new WeakMap([[this as object, result]])
+
+	const stack = getCopyItemsStack(this)
+
+	while (stack.length > 0) {
+		const { key, parent, value, state } = stack.pop()!
+
+		const copyParent = visited.get(parent)
+
+		if (copyParent == null) throw new Error('copyParent not defined')
+
+		let copyValue: unknown
+		if (typeof value !== 'object' || value == null) copyValue = value
+		else {
+			if (!visited.has(value)) {
+				visited.set(value, Object.create(Object.getPrototypeOf(value)))
+				stack.push(...getCopyItemsStack(value))
+			}
+			copyValue = visited.get(value)
+		}
+
+		;(copyParent as Record<string | number, unknown>)[key] = copyValue
+
+		if (state === 'head' && Object.isFrozen(parent)) Object.freeze(copyParent)
+	}
+
+	if (Object.isFrozen(this)) Object.freeze(result)
+	return result as T
 }
 /**
  * Default implementation of the `Prtcl.compareTo` method.
@@ -128,12 +163,11 @@ export function defaultFlat(this: object): FlatData {
 	}
 	if ('toJSON' in this && typeof this.toJSON === 'function' && defaultFlat !== this.toJSON) return this.toJSON()
 
-	const visited = new WeakMap<object, FlatRecord | FlatArray>()
-
 	const result = createFlatOutPut(this)
 
-	visited.set(this, result)
-	const stack = getItemsStack(this)
+	const visited = new WeakMap([[this, result]])
+
+	const stack = getFlatItemsStack(this)
 
 	while (stack.length > 0) {
 		const { key, parent, value } = stack.pop()!
@@ -160,7 +194,7 @@ export function defaultFlat(this: object): FlatData {
 			} else {
 				if (!visited.has(value)) {
 					visited.set(value, createFlatOutPut(value))
-					stack.push(...getItemsStack(value))
+					stack.push(...getFlatItemsStack(value))
 				}
 
 				flatValue = visited.get(value)
@@ -194,9 +228,40 @@ export function defaultFlat(this: object): FlatData {
  * foo.value = 2; // Don't change the value
  * ```
  */
-export function defaultMutableClone<T extends object>(this: T): Mutable<T> {
-	if (Array.isArray(this)) return [...this] as T
-	return { ...this }
+export function defaultMutableClone<T extends object>(this: T, hint: CloneHint = 'default'): Mutable<T> {
+	if (typeof this === 'function') return this
+	if (hint !== 'deep') {
+		if (Array.isArray(this)) return [...this] as T
+		return { ...this }
+	}
+
+	const result = createCopyOutPut(this)
+	const visited = new WeakMap([[this as object, result]])
+
+	const stack = getCopyItemsStack(this)
+
+	while (stack.length > 0) {
+		const { key, parent, value } = stack.pop()!
+
+		const copyParent = visited.get(parent)
+
+		if (copyParent == null) throw new Error('copyParent not defined')
+
+		let copyValue: unknown
+
+		if (typeof value !== 'object' || value == null) copyValue = value
+		else {
+			if (!visited.has(value)) {
+				visited.set(value, createCopyOutPut(value))
+				stack.push(...getCopyItemsStack(value))
+			}
+			copyValue = visited.get(value)
+		}
+
+		;(copyParent as Record<string | number, unknown>)[key] = copyValue
+	}
+
+	return result as never
 }
 
 /**
@@ -219,7 +284,40 @@ export function defaultMutableClone<T extends object>(this: T): Mutable<T> {
  * readonlyFoo.value = 2; // Don't change the value
  * ```
  */
-export function defaultReadonlyClone<T extends object>(this: T): Readonly<T> {
-	if (Array.isArray(this)) return Object.freeze([...this] as T)
-	return Object.freeze({ ...this })
+export function defaultReadonlyClone<T extends object>(this: T, hint: CloneHint = 'default'): Readonly<T> {
+	if (typeof this === 'function') return this
+	if (hint !== 'deep') {
+		if (Array.isArray(this)) return Object.freeze([...this] as T)
+		return Object.freeze({ ...this })
+	}
+
+	const result = createCopyOutPut(this)
+	const visited = new WeakMap([[this as object, result]])
+
+	const stack = getCopyItemsStack(this)
+
+	while (stack.length > 0) {
+		const { key, parent, value, state } = stack.pop()!
+
+		const copyParent = visited.get(parent)
+
+		if (copyParent == null) throw new Error('copyParent not defined')
+
+		let copyValue: unknown
+
+		if (typeof value !== 'object' || value == null) copyValue = value
+		else {
+			if (!visited.has(value)) {
+				visited.set(value, createCopyOutPut(value))
+				stack.push(...getCopyItemsStack(value))
+			}
+			copyValue = visited.get(value)
+		}
+
+		;(copyParent as Record<string | number, unknown>)[key] = copyValue
+
+		if (state === 'head') Object.freeze(copyParent)
+	}
+
+	return Object.freeze(result) as Readonly<T>
 }

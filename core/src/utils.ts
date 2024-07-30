@@ -1,10 +1,11 @@
 import type { FlatArray, FlatRecord } from './types.ts'
 
 /** item for stack in defaultFlat function. */
-interface FlatStackItem {
+interface StackItem {
 	parent: object
 	key: string | number
 	value: unknown
+	state: 'head' | 'tail' | 'body'
 }
 
 /**
@@ -66,11 +67,17 @@ export function createFlatOutPut(value: object): FlatArray | FlatRecord {
 function getPrototypesKeys(obj: object): string[] {
 	const stack: string[] = []
 	let proto = Object.getPrototypeOf(obj)
-	while (proto != null) {
+	while (proto != null && proto !== Object.prototype) {
 		stack.push(...Object.getOwnPropertyNames(proto))
 		proto = Object.getPrototypeOf(proto)
 	}
 	return stack
+}
+
+function getItemState(arr: readonly unknown[], index: number): StackItem['state'] {
+	if (index === 0) return 'head'
+	if (index === arr.length - 1) return 'tail'
+	return 'body'
 }
 
 /**
@@ -78,11 +85,45 @@ function getPrototypesKeys(obj: object): string[] {
  * @param parent The parent object.
  * @return The all items.
  */
-export function getItemsStack(parent: object): FlatStackItem[] {
+export function getFlatItemsStack(parent: object): StackItem[] {
 	if (isIterable(parent)) {
-		return Array.from(parent).map<FlatStackItem>((value, index) => ({ value, parent, key: index }))
+		return Array.from(parent).map<StackItem>((value, index, arr) => ({
+			value,
+			parent,
+			key: index,
+			state: getItemState(arr, index),
+		}))
 	}
 	const stack = Object.getOwnPropertyNames(parent).concat(getPrototypesKeys(parent))
 
-	return stack.map<FlatStackItem>((key) => ({ value: Reflect.get(parent, key), parent, key }))
+	return stack.map<StackItem>((key, index, arr) => ({
+		value: Reflect.get(parent, key),
+		parent,
+		key,
+		state: getItemState(arr, index),
+	}))
+}
+
+export function createCopyOutPut(value: object): Array<unknown> | Record<string | number, unknown> {
+	if (Array.isArray(value)) return []
+	return {}
+}
+
+export function getCopyItemsStack(parent: object): StackItem[] {
+	if (Array.isArray(parent)) {
+		return parent.map<StackItem>((value, index, arr) => ({
+			value,
+			parent,
+			key: index,
+			state: getItemState(arr, index),
+		}))
+	}
+	const stack = Object.getOwnPropertyNames(parent).concat(getPrototypesKeys(parent))
+
+	return stack.map<StackItem>((key, index, arr) => ({
+		value: Reflect.get(parent, key),
+		parent,
+		key,
+		state: getItemState(arr, index),
+	}))
 }

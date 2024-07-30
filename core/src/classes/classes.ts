@@ -1,6 +1,6 @@
 import type { IClone, ICompare, IEquals, IFlat, IMutableClone, IReadonlyClone } from '../interfaces.ts'
 import * as Prtcl from '../prtcl/mod.ts'
-import type { FlatData } from '../types.ts'
+import type { CloneHint, FlatData } from '../types.ts'
 import type {
 	// deno-lint-ignore no-unused-vars
 	BaseClonable,
@@ -26,7 +26,7 @@ import type {
  *     this.#value = value;
  *   }
  *
- *   [Prtcl.toClone]() {
+ *   [Prtcl.toClone](hint: CloneHint) {
  *     return new Foo(this.#value);
  *   }
  * }
@@ -39,7 +39,7 @@ import type {
  * @see {@link IClone} for an interface to ensure the implementation.
  */
 export abstract class Clonable<Clone extends Clonable<Clone>> implements IClone<Clone> {
-	abstract [Prtcl.toClone](): Clone
+	abstract [Prtcl.toClone](hint: CloneHint): Clone
 }
 
 /**
@@ -136,7 +136,7 @@ export abstract class Flateable<Data extends FlatData> implements IFlat<Data> {
  *     this.value = value;
  *   }
  *
- *   [Prtcl.toMutableClone]() {
+ *   [Prtcl.toMutableClone](hint: CloneHint) {
  *     return new Foo(this.#value);
  *   }
  * }
@@ -149,7 +149,7 @@ export abstract class Flateable<Data extends FlatData> implements IFlat<Data> {
  * @see {@link IMutableClone} for an interface to ensure the implementation.
  */
 export abstract class MutableClonable<MutableClone> implements IMutableClone<MutableClone> {
-	abstract [Prtcl.toMutableClone](): MutableClone
+	abstract [Prtcl.toMutableClone](hint: CloneHint): MutableClone
 }
 
 /**
@@ -164,7 +164,7 @@ export abstract class MutableClonable<MutableClone> implements IMutableClone<Mut
  *     this.#value = value;
  *   }
  *
- *   [Prtcl.toReadonlyClone]() {
+ *   [Prtcl.toReadonlyClone](hint: CloneHint) {
  *     return new Foo(this.#value);
  *   }
  * }
@@ -177,7 +177,7 @@ export abstract class MutableClonable<MutableClone> implements IMutableClone<Mut
  * @see {@link IReadonlyClone} for an interface to ensure the implementation.
  */
 export abstract class ReadonlyClonable<ReadonlyClone> implements IReadonlyClone<ReadonlyClone> {
-	abstract [Prtcl.toReadonlyClone](): ReadonlyClone
+	abstract [Prtcl.toReadonlyClone](hint: CloneHint): ReadonlyClone
 }
 
 // TODO: export abstract class Serializable {}
