@@ -22,7 +22,6 @@ import {
 import { getRandomInt, getRandomPrimitive } from 'test:utils'
 
 import type { FlatData } from './types.ts'
-import * as Prtcl from './prtcl/mod.ts'
 
 describe('defaultClone', () => {
 	test('Should thrown if called by a primitive', () => {
@@ -91,52 +90,6 @@ describe('defaultClone', () => {
 		assert(!Object.isFrozen(deepClone.foo))
 		assert(Object.isFrozen(deepClone.foo.bar))
 	})
-
-	// test('Should called Prtcl.toClone method', () => {
-	// 	const obj1 = {
-	// 		[Prtcl.toClone]: spy((): object => ({ ...obj1 })),
-	// 		value: 'foo',
-	// 	}
-	// 	const clone1 = defaultClone.call(obj1) as typeof obj1
-	//
-	// 	assertEquals(obj1, clone1)
-	// 	assertSpyCalls(obj1[Prtcl.toClone], 1)
-	// 	assertSpyCall(obj1[Prtcl.toClone], 0, { args: ['default'] })
-	//
-	// 	const obj2 = {
-	// 		foo: 'foo',
-	// 		bar: {
-	// 			[Prtcl.toClone]: spy((): object => ({ ...obj2.bar })),
-	// 			value: 'bar',
-	// 		},
-	// 	}
-	// 	const clone2 = defaultClone.call(obj2, 'deep') as typeof obj2
-	//
-	// 	assertEquals(obj2, clone2)
-	// 	assertSpyCalls(obj2.bar[Prtcl.toClone], 1)
-	// 	assertSpyCall(obj2.bar[Prtcl.toClone], 0, { args: ['deep'] })
-	// })
-	//
-	// test('Should ignore Prtcl.toClone method if they are the same function `defaultFlat`', () => {
-	// 	const obj1 = {
-	// 		[Prtcl.toClone]: defaultClone,
-	// 		value: 'foo',
-	// 	}
-	// 	const clone1 = defaultClone.call(obj1) as typeof obj1
-	//
-	// 	assertEquals(obj1, clone1)
-	//
-	// 	const obj2 = {
-	// 		foo: 'foo',
-	// 		bar: {
-	// 			[Prtcl.toClone]: defaultClone,
-	// 			value: 'bar',
-	// 		},
-	// 	}
-	// 	const clone2 = defaultClone.call(obj2, 'deep') as typeof obj2
-	//
-	// 	assertEquals(obj2, clone2)
-	// })
 })
 
 describe('defaultCompare', () => {
@@ -321,21 +274,7 @@ describe('defaultFlat', () => {
 		assertEquals(defaultFlat.call(obj), { date: date.toJSON() })
 	})
 
-	test('Should called Prtcl.toFlat method', () => {
-		const flateable = { [Prtcl.toFlat]: () => "i'm flat" }
-
-		assertEquals(defaultFlat.call(flateable), flateable[Prtcl.toFlat]())
-
-		const obj = { son: flateable }
-
-		assertEquals(defaultFlat.call(obj), { son: flateable[Prtcl.toFlat]() })
-	})
-
-	test('Should ignore Prtcl.toFlat and "toJSON" methods if they are the same function `defaultFlat`', () => {
-		const flateable = { [Prtcl.toFlat]: defaultFlat, value: 'foo' }
-
-		assertEquals(defaultFlat.call(flateable), { value: 'foo' })
-
+	test('Should ignore "toJSON" method if they are the same function `defaultFlat`', () => {
 		const jsonParseable = { toJSON: defaultFlat, value: 'foo' }
 
 		assertEquals(defaultFlat.call(jsonParseable), { value: 'foo' })

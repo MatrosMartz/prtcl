@@ -1,6 +1,5 @@
 import type { Primitives } from './native/types.ts'
 import type { CloneHint, FlatData, Mutable } from './types.ts'
-import * as Prtcl from './prtcl/mod.ts'
 import { createCopyOutPut, createFlatOutPut, getCopyItemsStack, getFlatItemsStack, isPrimitiveWraper } from './utils.ts'
 
 /**
@@ -158,9 +157,6 @@ export function defaultEquals(this: object, other: unknown): boolean {
 export function defaultFlat(this: object): FlatData {
 	if (typeof this === 'function') return undefined
 	if (isPrimitiveWraper(this)) return this.valueOf()
-	if (Prtcl.toFlat in this && typeof this[Prtcl.toFlat] === 'function' && defaultFlat !== this[Prtcl.toFlat]) {
-		return this[Prtcl.toFlat]()
-	}
 	if ('toJSON' in this && typeof this.toJSON === 'function' && defaultFlat !== this.toJSON) return this.toJSON()
 
 	const result = createFlatOutPut(this)
@@ -185,10 +181,6 @@ export function defaultFlat(this: object): FlatData {
 		if (typeof value === 'object' && value != null) {
 			if (isPrimitiveWraper(value)) {
 				flatValue = value.valueOf()
-			} else if (
-				Prtcl.toFlat in value && typeof value[Prtcl.toFlat] === 'function' && defaultFlat !== value[Prtcl.toFlat]
-			) {
-				flatValue = value[Prtcl.toFlat]()
 			} else if ('toJSON' in value && typeof value.toJSON === 'function' && defaultFlat != value.toJSON) {
 				flatValue = value.toJSON()
 			} else {
