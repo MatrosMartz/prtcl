@@ -4,7 +4,7 @@
   },
 
   "name": "@prtcl/prtcl",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "exports": {
     ".": "./src/mod.ts",
     "./decorators": "./src/decorators/mod.ts",
