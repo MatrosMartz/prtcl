@@ -25,13 +25,14 @@ Method used to obtain a read-only copy of the object.
 Its use is intended for cases such as `Map` and `Set` objects, which modify
 their data through methods, that lack a native way to create a read-only copy.
 
-Its symbol is located inside the Prtcl object:
+It receives as a single argument the cloning mode hint, which can have the
+following values: _shallow_, _deep_, or _default_.
 
 ## Overview
 
 ### Symbol
 
-This interface defines how to implement the method:
+Its symbol is located inside the Prtcl object:
 
 ```typescript
 import { Prtcl } from "prtcl";
@@ -45,7 +46,7 @@ This interface defines how to implement the method:
 
 ```typescript
 interface IReadonlyClone<ReadonlyClone> {
-  [Prtcl.toReadonlyClone](): ReadonlyClone;
+  [Prtcl.toReadonlyClone](hint: "default" | "deep" | "shallow"): ReadonlyClone;
 }
 ```
 
@@ -68,7 +69,8 @@ import { Extend } from "prtcl";
 
 declare const foo: Set<number>;
 
-foo as Extend.ReadonlyClone<Set<number>, ReadonlySet<number>; // Set<number> & { [Prtcl.toReadonlyClone](): ReadonlySet<number> }
+foo as Extend.ReadonlyClone<Set<number>, ReadonlySet<number>;
+// Set<number> & { [Prtcl.toReadonlyClone](hint): ReadonlySet<number> }
 ```
 
 ### Default Method
@@ -98,6 +100,44 @@ class User {
 
   [Prtcl.toReadonlyClone] = defaultReadonlyClone;
 }
+```
+
+If no hint value is passed, it is _default_. If the hint is _default_, it
+returns a shallow clone (the same with the _shallow_ hint).
+
+This method follows the following steps:
+
+- If it is a primitive, it returns it.
+
+```typescript
+console.log(defaultClone.call("foo")); // Throws
+
+const obj = { foo: "foo" };
+
+console.log(defaultClone.call(obj)); // Object { foo: 'foo' }
+```
+
+- If it is a function, it returns it.
+
+```typescript
+console.log(defaultClone.call(() => "foo")); // Function () => 'foo'
+
+const obj = { foo: () => "foo" };
+
+console.log(defaultClone.call(obj)); // Object { foo: Function () => 'foo' }
+```
+
+- If it is an object or array, it creates a read-only copy.
+
+```typescript
+console.log(defaultClone.call(["foo", "bar"])); // Array ['foo', 'bar']
+
+const obj = { foo: "foo" };
+
+const clone = defaultClone.call(obj);
+
+console.log(clone); // Object { foo: 'foo' }
+console.log(Object.isFrozen(clone)); // true
 ```
 
 ## Clone Implementations

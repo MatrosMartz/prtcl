@@ -245,7 +245,7 @@ libraries and frameworks. Stay tuned for updates!
 
 ## TODO
 
-- Create web documentation.
-- Create the rest of the library and place them in integrations.
-- Add an optional parameter in the methods clone, mutableClone, and
-  readonlyClone to specify whether the copy should be deep or shallow.
+- [ ] Create web documentation.
+- [ ] Create the rest of the library and place them in integrations.
+- [x] Add an optional parameter in the methods clone, mutableClone, and
+      readonlyClone to specify whether the copy should be deep or shallow.

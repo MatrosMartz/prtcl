@@ -102,6 +102,8 @@ class Position {
 }
 ```
 
+transforms one's own object and another into numbers for comparison.
+
 ## Implementations
 
 ### Interface

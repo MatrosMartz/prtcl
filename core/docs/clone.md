@@ -22,9 +22,8 @@
 
 The Clone method is used to obtain a copy of an object.
 
-Currently, there is no option to specify whether you want a shallow or deep
-copy, but this functionality will be added in the future. It is advisable to opt
-for one type of cloning (shallow or deep) for your entire application.
+It receives as a single argument the cloning mode hint, which can have the
+following values: _shallow_, _deep_, or _default_.
 
 ## Overview
 
@@ -44,7 +43,7 @@ This interface defines how to implement the method:
 
 ```typescript
 interface IClone<T> {
-  [Prtcl.toClone](): T;
+  [Prtcl.toClone](hint: "default" | "deep" | "shallow"): T;
 }
 ```
 
@@ -67,7 +66,7 @@ import { Extend } from "prtcl";
 
 declare const foo: Foo;
 
-foo as Extend.Clone<Foo>; // Foo & { [Prtcl.toClone](): Foo }
+foo as Extend.Clone<Foo>; // Foo & { [Prtcl.toClone](hint): Foo }
 ```
 
 ### Default method
