@@ -16,3 +16,16 @@ export type CloneHint = 'deep' | 'default' | 'shallow'
 
 /** Contrary to the type `Readonly`. */
 export type Mutable<T> = { -readonly [k in keyof T]: T[k] }
+
+/**
+ * Type for Classes.
+ * @template T The instace type.
+ */
+// deno-lint-ignore no-explicit-any
+export type Class<T = unknown> = new (...args: any[]) => T
+
+/**
+ * Gets the instace type of a class.
+ * @template T The class.
+ */
+export type InstanceOf<T> = T extends Class<infer I> ? I : never

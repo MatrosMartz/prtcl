@@ -3,7 +3,8 @@
  * @module
  */
 
-import type { Class, Primitives, ToPrimitiveHint, UnscopableRecord } from './types.ts'
+import type { Class } from '../types.ts'
+import type { Primitives, ToPrimitiveHint, UnscopableRecord } from './types.ts'
 
 /**
  * Ensures that the `Symbol.asyncIterator` is correctly implements.
@@ -151,5 +152,5 @@ export interface IToStringTag {
  * @see {@link Symbol.unscopables} for more information.
  */
 export interface IUnscopables {
-	[Symbol.unscopables]: UnscopableRecord<this>
+	[Symbol.unscopables]: UnscopableRecord
 }

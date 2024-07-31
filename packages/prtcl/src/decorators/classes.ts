@@ -3,7 +3,7 @@
  * @module
  */
 
-import type { Class, InstanceOf } from '../native/mod.ts'
+import type { Class, InstanceOf } from '../types.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 
 type Decorator<T> = (target: T, ctx: DecoratorContext) => void | T

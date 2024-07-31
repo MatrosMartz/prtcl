@@ -49,18 +49,3 @@ export type ToPrimitiveHint = 'default' | 'number' | 'string'
 export type UnscopableRecord = {
 	readonly [k: PropertyKey]: boolean
 }
-
-// TODO: move this in to ../types.ts
-
-/**
- * Type for Classes.
- * @template T The instace type.
- */
-// deno-lint-ignore no-explicit-any
-export type Class<T = unknown> = new (...args: any[]) => T
-
-/**
- * Gets the instace type of a class.
- * @template T The class.
- */
-export type InstanceOf<T> = T extends Class<infer I> ? I : never
