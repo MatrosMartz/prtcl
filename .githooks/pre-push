@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+cd packages/prtcl
+deno fmt & deno lint
+deno check
+
+cd ../..
