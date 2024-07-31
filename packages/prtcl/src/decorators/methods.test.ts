@@ -24,7 +24,9 @@ describe('useToClone decorator', () => {
 	})
 
 	test('Should be match if both object are equals', () => {
-		const copy = (foo as Extend.Clone<Foo<string>>)[Prtcl.toClone]()
+		type FooToCopy = Extend.Clone<Foo<string>>
+
+		const copy = (foo as FooToCopy)[Prtcl.toClone]('default')
 		assertEquals(copy, foo)
 	})
 })
@@ -51,7 +53,9 @@ describe('useCompareTo decorator', () => {
 	test('Should return diference in to both object', () => {
 		const otherFoo = new Foo(34)
 
-		assertEquals((foo as Extend.Compare<Foo, unknown>)[Prtcl.compareTo](otherFoo), -22)
+		type FooComapreTo = Extend.Compare<Foo, unknown>
+
+		assertEquals((foo as FooComapreTo)[Prtcl.compareTo](otherFoo), -22)
 	})
 })
 
@@ -76,7 +80,9 @@ describe('useEqualsTo decorator', () => {
 
 	test('Should comarate with object and return true', () => {
 		const otherFoo = new Foo('foo')
-		assert((foo as Extend.Equals<Foo<string>>)[Prtcl.equalsTo](otherFoo))
+		type FooEqualsTO = Extend.Equals<Foo<string>>
+
+		assert((foo as FooEqualsTO)[Prtcl.equalsTo](otherFoo))
 	})
 })
 
@@ -100,7 +106,9 @@ describe('useToUnwrap decorator', () => {
 	})
 
 	test('Should return unwrap data of foo', () => {
-		assertEquals((foo as Extend.Flat<Foo<string>, string>)[Prtcl.toFlat](), 'foo')
+		type FooToFlat = Extend.Flat<Foo<string>, string>
+
+		assertEquals((foo as FooToFlat)[Prtcl.toFlat](), 'foo')
 	})
 })
 
@@ -165,8 +173,9 @@ describe('useToMutable decorator', () => {
 	})
 
 	test('Should return readonly clone', () => {
-		const mutableCopyList = (list as Extend.MutableClone<ReadonlyList<string>, MutableList<string>>)
-			[Prtcl.toMutableClone]()
+		type ListToMutableClone = Extend.MutableClone<ReadonlyList<string>, MutableList<string>>
+
+		const mutableCopyList = (list as ListToMutableClone)[Prtcl.toMutableClone]('default')
 		const mutableList = new MutableList(['foo', 'bar'])
 
 		assertInstanceOf(mutableCopyList, MutableList)
@@ -235,8 +244,9 @@ describe('useToReadonly decorator', () => {
 	})
 
 	test('Should return readonly clone', () => {
-		const readonlyCopyList = (list as Extend.ReadonlyClone<MutableList<string>, ReadonlyList<string>>)
-			[Prtcl.toReadonlyClone]()
+		type ListToReadonlyClone = Extend.ReadonlyClone<MutableList<string>, ReadonlyList<string>>
+
+		const readonlyCopyList = (list as ListToReadonlyClone)[Prtcl.toReadonlyClone]('default')
 		const readonlyList = new ReadonlyList(['foo', 'bar'])
 
 		assertInstanceOf(readonlyCopyList, ReadonlyList)
