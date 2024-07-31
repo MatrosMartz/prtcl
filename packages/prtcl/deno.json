@@ -1,6 +1,6 @@
 {
   "name": "@prtcl/prtcl",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "publish": {
     "exclude": ["test", "docs", "src/**/*.test.ts"]
   },
