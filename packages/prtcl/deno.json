@@ -6,12 +6,12 @@
   "name": "@prtcl/prtcl",
   "version": "1.0.0",
   "publish": {
-    "exclude": {
+    "exclude": [
       "test",
       "docs",
       "src/**/*.test.ts"
-    }
-  }
+    ]
+  },
   "exports": {
     ".": "./src/mod.ts",
     "./decorators": "./src/decorators/mod.ts",
