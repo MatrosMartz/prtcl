@@ -1,3 +1,8 @@
+/**
+ * Contains types of each method for type assertion.
+ * @module
+ */
+
 import type { IClone, ICompare, IEquals, IFlat, IMutableClone, IReadonlyClone } from './interfaces.ts'
 import type { FlatData } from './types.ts'
 
