@@ -14,8 +14,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
 
       - name: Publish @prtcl/prtcl
-      - run: cd packages/prtcl
-      - run: npx jsr publish
+      - run: cd packages/prtcl; npx jsr publish
