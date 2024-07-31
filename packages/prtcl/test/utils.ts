@@ -5,13 +5,12 @@
 
 /**
  * Gets random integer between the minimun and maximun specified.
- * @param min The minimun.
- * @param max The maximun.
+ * @param min The minimun, if it is not an integer, round it.
+ * @param max The maximun, if it is not an integer, round it.
  * @return Random integer.
  */
 export function getRandomInt(min: number, max: number) {
-	// TODO: ensure that minimum and maximum are integers.
-	return Math.floor(Math.random() * max) + min
+	return Math.floor(Math.random() * Math.floor(max)) + Math.floor(min)
 }
 
 /** The primitives array. */
