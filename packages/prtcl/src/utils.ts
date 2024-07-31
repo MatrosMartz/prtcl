@@ -1,3 +1,8 @@
+/**
+ * This module defines internal utilities for prtcl.
+ * @module
+ */
+
 import type { FlatArray, FlatRecord } from './types.ts'
 
 /** item for stack in defaultFlat function. */

@@ -1,3 +1,8 @@
+/**
+ * This module implements some interfaces for the use of native symbols.
+ * @module
+ */
+
 import type { Class, Primitives, ToPrimitiveHint, UnscopableRecord } from './types.ts'
 
 /**

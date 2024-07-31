@@ -1,3 +1,8 @@
+/**
+ * This module defines decorators that recieve function to used as a prtcl methods.
+ * @module
+ */
+
 import type { Class, InstanceOf } from '../native/mod.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 
@@ -82,7 +87,7 @@ export function compareBy<C extends Class, T extends InstanceOf<C>, U>(
  * @template T The instance type.
  * @param instance The principal object to compare.
  * @param other The object with compare the instance.
- * @returns True, if both objects are equals, false otherwise.
+ * @return True, if both objects are equals, false otherwise.
  */
 type EqualsByCallback<T> = (instance: T, other: unknown) => boolean
 
@@ -111,7 +116,7 @@ export function equalsBy<C extends Class, T extends InstanceOf<C>>(
  * @template T The instance type.
  * @template U The flat data..
  * @param instance The object to optains data.
- * @returns The flat data.
+ * @return The flat data.
  */
 type FlatByCallback<T, U> = (instance: T) => U
 
@@ -138,7 +143,7 @@ export function flatBy<C extends Class, T extends InstanceOf<C>, U>(callback: Fl
  * @template T The instance type.
  * @template U The mutable clone type.
  * @param instance The object to create mutable clone.
- * @returns New mutable clone.
+ * @return New mutable clone.
  */
 type MutableCloneByCallback<T, U> = (instance: T) => U
 
@@ -167,7 +172,7 @@ export function mutableCloneBy<C extends Class, T extends InstanceOf<C>, U>(
  * @template T The instance type.
  * @template U The readonly clone type.
  * @param instance The object to create readonly clone.
- * @returns New readonly clone.
+ * @return New readonly clone.
  */
 type ReadonlyCloneByCallback<T, U> = (instance: T) => U
 

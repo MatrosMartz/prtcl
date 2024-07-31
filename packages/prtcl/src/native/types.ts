@@ -1,3 +1,8 @@
+/**
+ * This module defines types used by interfaces for native symbols.
+ * @module
+ */
+
 /** The primitives types. */
 export type Primitives =
 	| bigint
@@ -40,12 +45,24 @@ export type ReplaceReplacer = (
 /** Type for hint param of `Symbol.toPrimitive` method. */
 export type ToPrimitiveHint = 'default' | 'number' | 'string'
 
+// TODO: remove template type
+
 /** Type for value of `Symbol.Unscopable`. */
 export type UnscopableRecord<T> = {
 	readonly [k in keyof T]: boolean
 }
 
+// TODO: move this in to ../types.ts
+
+/**
+ * Type for Classes.
+ * @template T The instace type.
+ */
 // deno-lint-ignore no-explicit-any
 export type Class<T = unknown> = new (...args: any[]) => T
 
+/**
+ * Gets the instace type of a class.
+ * @template T The class.
+ */
 export type InstanceOf<T> = T extends Class<infer I> ? I : never

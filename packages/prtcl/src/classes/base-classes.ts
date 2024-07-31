@@ -1,3 +1,8 @@
+/**
+ * This module defines abstract classes with basic implementation for prtcl methods.
+ * @module
+ */
+
 import {
 	defaultClone,
 	defaultCompare,

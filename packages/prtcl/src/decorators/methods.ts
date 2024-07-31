@@ -1,3 +1,8 @@
+/**
+ * This module defines decorators that use the decorated method as the value of the prtcl methods.
+ * @module
+ */
+
 import * as Prtcl from '../prtcl/mod.ts'
 /**
  * Ensured if field or method is a function.

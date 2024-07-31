@@ -1,3 +1,7 @@
+/**
+ * This module defines the default methods.
+ * @module
+ */
 import type { Primitives } from './native/types.ts'
 import type { CloneHint, FlatData, Mutable } from './types.ts'
 import { createCopyOutPut, createFlatOutPut, getCopyItemsStack, getFlatItemsStack, isPrimitiveWraper } from './utils.ts'

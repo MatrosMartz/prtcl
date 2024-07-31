@@ -1,4 +1,9 @@
 /**
+ * This module defines the Prtcl symbols.
+ * @module
+ */
+
+/**
  * A method that returns a copy of an object.
  * @example
  * ```typescript

@@ -1,3 +1,8 @@
+/**
+ * This module defines the guard function: `impl`.
+ * @module
+ */
+
 import { toObject } from '../utils.ts'
 import type * as Extends from '../extend.ts'
 import { compareTo, equalsTo, toClone, toFlat, toMutableClone, toReadonlyClone } from './symbols.ts'
@@ -20,7 +25,7 @@ export type ProtocolName = keyof Implements
  * @template PN The protocol name.
  * @param protocol The name of protocol.
  * @param value The object.
- * @returns Guard if object implements protocol.
+ * @return Guard if object implements protocol.
  */
 export function impl<T, PN extends ProtocolName>(
 	protocol: PN,

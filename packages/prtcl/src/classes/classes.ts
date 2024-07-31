@@ -1,3 +1,8 @@
+/**
+ * This module defines abstracts classes with abstract prtcl methods.
+ * @module
+ */
+
 import type { IClone, ICompare, IEquals, IFlat, IMutableClone, IReadonlyClone } from '../interfaces.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 import type { CloneHint, FlatData } from '../types.ts'

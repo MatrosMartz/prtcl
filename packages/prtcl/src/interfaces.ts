@@ -1,3 +1,8 @@
+/**
+ * This module includes interfaces that define how implement the methods.
+ * @module
+ */
+
 import type * as Prtcl from './prtcl/mod.ts'
 import type { CloneHint, FlatData } from './types.ts'
 import type {
