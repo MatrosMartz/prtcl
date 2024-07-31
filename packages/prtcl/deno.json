@@ -1,16 +1,8 @@
 {
-  "tasks": {
-    "test": "deno test --watch"
-  },
-
   "name": "@prtcl/prtcl",
   "version": "1.0.1",
   "publish": {
-    "exclude": [
-      "test",
-      "docs",
-      "src/**/*.test.ts"
-    ]
+    "exclude": ["test", "docs", "src/**/*.test.ts"]
   },
   "exports": {
     ".": "./src/mod.ts",
