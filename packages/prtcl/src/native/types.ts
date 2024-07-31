@@ -45,11 +45,9 @@ export type ReplaceReplacer = (
 /** Type for hint param of `Symbol.toPrimitive` method. */
 export type ToPrimitiveHint = 'default' | 'number' | 'string'
 
-// TODO: remove template type
-
 /** Type for value of `Symbol.Unscopable`. */
-export type UnscopableRecord<T> = {
-	readonly [k in keyof T]: boolean
+export type UnscopableRecord = {
+	readonly [k: PropertyKey]: boolean
 }
 
 // TODO: move this in to ../types.ts
