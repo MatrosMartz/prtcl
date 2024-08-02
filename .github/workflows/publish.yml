@@ -8,6 +8,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    if: github.repository === 'MatrosMartz/prtcl'
     permissions:
       contents: read
       id-token: write
@@ -17,10 +18,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup deno
-        run: denoland/setup-deno@1
+        uses: denoland/setup-deno@1
 
-      - name: Format
-        run: deno task fmt:check
+      - name: Check files
+        run: deno task ok
 
-      - name: Publish packages
+      - name: Publish to JSR
         run: deno publish
