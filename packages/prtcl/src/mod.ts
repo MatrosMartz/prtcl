@@ -1,6 +1,7 @@
 /**
- * This module include Prtcl namespace and Extends interfaces for methods.
- * @module
+
+* This module include Prtcl namespace and Extends interfaces for methods.
+* @module
  */
 
 export type * as Extends from './extend.ts'

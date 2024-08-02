@@ -1,27 +1,30 @@
 /**
- * This module defines the default methods.
- * @module
+
+* This module defines the default methods.
+* @module
  */
 import type { Primitives } from './native/types.ts'
 import type { CloneHint, FlatData, Mutable } from './types.ts'
 import { createCopyOutPut, createFlatOutPut, getCopyItemsStack, getFlatItemsStack, isPrimitiveWraper } from './utils.ts'
 
 /**
- * Default implementation of the `Prtcl.toClone` method.
- *
- * Only works with public fields.
- * @return Shallow copy of the object it belongs to.
- * @example
- * ```typescript
- * const foo1 = {
- *   value: 1,
- *   [Prtcl.toClone]: defaultClone,
- * };
- *
- * const foo2 = Copy.clone(foo1); // Call inside the Prtcl.toClone method.
- * console.log(foo2); // Object { value: 1 }
- * console.log(foo1 === foo2); // false
- * ```
+
+* Default implementation of the `Prtcl.toClone` method.
+*
+* Only works with public fields.
+* @return Shallow copy of the object it belongs to.
+* @example
+* ```typescript
+
+* const foo1 = {
+* value: 1,
+* };
+*
+* const foo2 = Copy.clone(foo1); // Call inside the Prtcl.toClone method.
+* console.log(foo2); // Object { value: 1 }
+* console.log(foo1 === foo2); // false
+* ```
+
  */
 export function defaultClone<T extends object>(this: T, hint: CloneHint = 'default'): T {
 	if (typeof this === 'function') return this
@@ -63,23 +66,25 @@ export function defaultClone<T extends object>(this: T, hint: CloneHint = 'defau
 	return result as T
 }
 /**
- * Default implementation of the `Prtcl.compareTo` method.
- *
- * Only works with objects that can be converted into numbers.
- * @param other The object with compare.
- * @return The diference in number value.
- * @example
- * ```typescript
- * const foo = {
- *   value: 1,
- *   [Prtcl.compareTo]: defualtCompare,
- *   valueOf() {
- *     return this.value;
- *   },
- * };
- *
- * Comparator.lessThat(foo, bar); // Call inside the Prtcl.compareTo method.
- * ```
+
+* Default implementation of the `Prtcl.compareTo` method.
+*
+* Only works with objects that can be converted into numbers.
+* @param other The object with compare.
+* @return The diference in number value.
+* @example
+* ```typescript
+
+* const foo = {
+* value: 1,
+* valueOf() {
+*     return this.value;
+* },
+* };
+*
+* Comparator.lessThat(foo, bar); // Call inside the Prtcl.compareTo method.
+* ```
+
  */
 export function defaultCompare(this: object, other: unknown): number {
 	const [thisNum, otherNum] = [Number(this), Number(other)]
@@ -89,19 +94,21 @@ export function defaultCompare(this: object, other: unknown): number {
 }
 
 /**
- * Default implementation of the `Prtcl.equalsTo` method.
- *
- * Only works with public fields.
- * Shallow compare.
- * @return True, if two objects are equals, false otherwise.
- * @example
- * ```typescript
- * const foo = {
- *   [Prtcl.equalsTo]: defaultEquals,
- * };
- *
- * Comparator.equalsTo(foo, bar); // Call inside the Prtcl.equalsTo method.
- * ```
+
+* Default implementation of the `Prtcl.equalsTo` method.
+*
+* Only works with public fields.
+* Shallow compare.
+* @return True, if two objects are equals, false otherwise.
+* @example
+* ```typescript
+
+* const foo = {
+* };
+*
+* Comparator.equalsTo(foo, bar); // Call inside the Prtcl.equalsTo method.
+* ```
+
  */
 export function defaultEquals(this: object, other: unknown): boolean {
 	if (typeof other !== 'object' || other == null) return false
@@ -109,54 +116,56 @@ export function defaultEquals(this: object, other: unknown): boolean {
 	if (Number.isNaN(this) && Number.isNaN(other)) return true
 
 	return this === other
-	// 	const thisKeys = Object.keys(this)
-	// 	if (thisKeys.length !== Object.keys(other).length) return false
-	// 	const stack: Array<readonly [unknown, unknown]> = thisKeys.map((
-	// 		key,
-	// 	) => [Reflect.get(this, key), Reflect.get(other, key)])
+	//  const thisKeys = Object.keys(this)
+	//  if (thisKeys.length !== Object.keys(other).length) return false
+	//  const stack: Array<readonly [unknown, unknown]> = thisKeys.map((
+	//   key,
+	//  ) => [Reflect.get(this, key), Reflect.get(other, key)])
 	//
-	// 	while (stack.length > 0) {
-	// 		const [val1, val2] = stack.shift()!
+	//  while (stack.length > 0) {
+	//   const [val1, val2] = stack.shift()!
 	//
-	// 		if (Number.isNaN(val1) && Number.isNaN(val2)) continue
+	//   if (Number.isNaN(val1) && Number.isNaN(val2)) continue
 	//
-	// 		if (typeof val1 === 'object' && val1 != null) {
-	// 			if (typeof val2 !== 'object' || val2 == null) return false
+	//   if (typeof val1 === 'object' && val1 != null) {
+	//    if (typeof val2 !== 'object' || val2 == null) return false
 	//
-	// 			const val1Keys = Object.keys(val1)
+	//    const val1Keys = Object.keys(val1)
 	//
-	// 			if (val1Keys.length !== Object.keys(val2).length) return false
+	//    if (val1Keys.length !== Object.keys(val2).length) return false
 	//
-	// 			stack.push(...val1Keys.map<[unknown, unknown]>((key) => [Reflect.get(val1, key), Reflect.get(val2, key)]))
-	// 		}
-	// 		if (val1 !== val2) return false
-	// 	}
-	// 	return true
+	//    stack.push(...val1Keys.map<[unknown, unknown]>((key) => [Reflect.get(val1, key), Reflect.get(val2, key)]))
+	//   }
+	//   if (val1 !== val2) return false
+	//  }
+	//  return true
 }
 
 /**
- * Default implementation of the `Prtcl.toFlat` method.
- *
- * If the object has the method `Prtcl.toFlat`, calls it.
- * If the object has the method 'toJSON', calls it.
- * Does not call them if they refer to this function.
- * If the object is iterable, transforms it to an array, otherwise to an object.
- *
- * @return Fattened data.
- * @example
- * ```typescript
- * const foo = {
- *   field: 1,
- *   get getter() {
- *     return 'bar';
- *   },
- *   method() {},
- *   [Prtcl.toFlat]: defaultFlat,
- * };
- *
- * const fooFlated = Serialize.flat(foo); // Calls inside the Prtcl.toFlat method
- * console.log(fooFlated); // Object { field: 1, getter: 'bar'}
- * ```
+
+* Default implementation of the `Prtcl.toFlat` method.
+*
+* If the object has the method `Prtcl.toFlat`, calls it.
+* If the object has the method 'toJSON', calls it.
+* Does not call them if they refer to this function.
+* If the object is iterable, transforms it to an array, otherwise to an object.
+*
+* @return Fattened data.
+* @example
+* ```typescript
+
+* const foo = {
+* field: 1,
+* get getter() {
+*     return 'bar';
+* },
+* method() {},
+* };
+*
+* const fooFlated = Serialize.flat(foo); // Calls inside the Prtcl.toFlat method
+* console.log(fooFlated); // Object { field: 1, getter: 'bar'}
+* ```
+
  */
 export function defaultFlat(this: object): FlatData {
 	if (typeof this === 'function') return undefined
@@ -206,23 +215,25 @@ export function defaultFlat(this: object): FlatData {
 }
 
 /**
- * Default implementation of the `Prtcl.toMutableClone` method.
- *
- * Only works with public fields.
- * @return Shallow mutable copy of the object it belongs to.
- * @example
- * ```typescript
- * const foo = Object.freeze({
- *   value: 1,
- *   [Prtcl.toMutableClone]: defaultMutableClone,
- * });
- *
- * const mutableFoo = Copy.mutableClone(foo1) // Calls inside the Prtcl.toMutableClone method
- * console.log(mutableFoo); // Object { value: 1 }
- * console.log(foo1 === mutableFoo); // false
- * mutableFoo.value = 2; // Works
- * foo.value = 2; // Don't change the value
- * ```
+
+* Default implementation of the `Prtcl.toMutableClone` method.
+*
+* Only works with public fields.
+* @return Shallow mutable copy of the object it belongs to.
+* @example
+* ```typescript
+
+* const foo = Object.freeze({
+* value: 1,
+* });
+*
+* const mutableFoo = Copy.mutableClone(foo1) // Calls inside the Prtcl.toMutableClone method
+* console.log(mutableFoo); // Object { value: 1 }
+* console.log(foo1 === mutableFoo); // false
+* mutableFoo.value = 2; // Works
+* foo.value = 2; // Don't change the value
+* ```
+
  */
 export function defaultMutableClone<T extends object>(this: T, hint: CloneHint = 'default'): Mutable<T> {
 	if (typeof this === 'function') return this
@@ -261,24 +272,26 @@ export function defaultMutableClone<T extends object>(this: T, hint: CloneHint =
 }
 
 /**
- * Default implementation of the `Prtcl.toReadonlyClone` method.
- *
- * Only works with public fields.
- * @return Shallow readonly copy of the object it belongs to.
- * @example
- * ```typescript
- * const foo = {
- *   value: 1,
- *   [Prtcl.toReadonlyClone]: defaultReadonlyClone,
- * };
- *
 
- * const readonlyFoo = Copy.readonlyClone(foo1); // Calls inside the Prtcl.toReadonlyClone method
- * console.log(readonlyFoo); // Object { value: 1 }
- * console.log(foo1 === readonlyFoo); // false
- * foo.value = 2; // Works
- * readonlyFoo.value = 2; // Don't change the value
- * ```
+* Default implementation of the `Prtcl.toReadonlyClone` method.
+*
+* Only works with public fields.
+* @return Shallow readonly copy of the object it belongs to.
+* @example
+* ```typescript
+
+* const foo = {
+* value: 1,
+* };
+*
+
+* const readonlyFoo = Copy.readonlyClone(foo1); // Calls inside the Prtcl.toReadonlyClone method
+* console.log(readonlyFoo); // Object { value: 1 }
+* console.log(foo1 === readonlyFoo); // false
+* foo.value = 2; // Works
+* readonlyFoo.value = 2; // Don't change the value
+* ```
+
  */
 export function defaultReadonlyClone<T extends object>(this: T, hint: CloneHint = 'default'): Readonly<T> {
 	if (typeof this === 'function') return this

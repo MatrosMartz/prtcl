@@ -2,8 +2,8 @@
 
 set -e
 
-cd packages/prtcl
-deno fmt & deno lint
-deno check
+deno fmt
 
-cd ../..
+deno lint
+
+deno check

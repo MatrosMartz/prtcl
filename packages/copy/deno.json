@@ -1,0 +1,10 @@
+{
+	"name": "@prtcl/copy",
+	"version": "0.0.1",
+	"publish": {
+		"exclude": ["docs", "test", "src/**/*.ts"]
+	},
+	"exports": {
+		".": "./src/mod.ts"
+	}
+}

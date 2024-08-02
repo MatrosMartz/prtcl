@@ -7,9 +7,9 @@ import {
 	assertLess,
 	assertNotStrictEquals,
 	assertThrows,
-} from 'jsr:@std/assert'
-import { describe, test } from 'jsr:@std/testing/bdd'
-import { assertSpyCall, assertSpyCalls, spy } from 'jsr:@std/testing/mock'
+} from '@std/assert'
+import { describe, test } from '@std/testing/bdd'
+// import { assertSpyCall, assertSpyCalls, spy } from '@std/testing/mock'
 
 import {
 	defaultClone,

@@ -22,11 +22,11 @@
 
 Method used to obtain a mutable copy of the object.
 
-Its use is intended for cases such as `Map` and `Set` objects, which modify
-their data through methods, that lack a native way to create a read-only copy.
+Its use is intended for cases such as `Map` and `Set` objects, which modify their data through methods, that lack a
+native way to create a read-only copy.
 
-It receives as a single argument the cloning mode hint, which can have the
-following values: _shallow_, _deep_, or _default_.
+It receives as a single argument the cloning mode hint, which can have the following values: _shallow_, _deep_, or
+_default_.
 
 ## Overview
 
@@ -35,9 +35,9 @@ following values: _shallow_, _deep_, or _default_.
 Its symbol is located inside the Prtcl object:
 
 ```typescript
-import { Prtcl } from "prtcl";
+import { Prtcl } from 'prtcl'
 
-Prtcl.toMutableClone;
+Prtcl.toMutableClone
 ```
 
 ### Definition
@@ -46,7 +46,7 @@ This interface defines how to implement the method:
 
 ```typescript
 interface IMutableClone<MutableClone> {
-  [Prtcl.toMutableClone](hint: "default" | "deep" | "shallow"): MutableClone;
+	[Prtcl.toMutableClone](hint: 'default' | 'deep' | 'shallow'): MutableClone
 }
 ```
 
@@ -55,8 +55,8 @@ interface IMutableClone<MutableClone> {
 You can check if an object implements it in the following way:
 
 ```typescript
-if (Prtcl.impl("mutableClone", obj)) {
-  // obj implements mutable clone method
+if (Prtcl.impl('mutableClone', obj)) {
+	// obj implements mutable clone method
 }
 ```
 
@@ -79,102 +79,101 @@ Basic method to mutable clone an object, not recommended for direct use.
 
 ```typescript
 // Definition
-type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+type Mutable<T> = { -readonly [K in keyof T]: T[K] }
 
 export function defaultMutableClone<T extends object>(this: T): Mutable<T> {
-  if (Array.isArray(this)) return [...this] as T;
-  return { ...this };
+	if (Array.isArray(this)) return [...this] as T
+	return { ...this }
 }
 
 // Use
-import { defaultMutableClone } from "prtcl/methods";
+import { defaultMutableClone } from 'prtcl/methods'
 
 class ReadonlyUser {
-  readonly id: string;
-  readonly email: string;
-  readonly name: string;
+	readonly id: string
+	readonly email: string
+	readonly name: string
 
-  constructor(id: string, email: string, name: string) {
-    this.id = id;
-    this.email = email;
-    this.name = name;
-  }
+	constructor(id: string, email: string, name: string) {
+		this.id = id
+		this.email = email
+		this.name = name
+	}
 
-  [Prtcl.toMutableClone] = defaultMutableClone;
+	[Prtcl.toMutableClone] = defaultMutableClone
 }
 ```
 
-If no hint value is passed, it is _default_. If the hint is _default_, it
-returns a shallow clone (the same with the _shallow_ hint).
+If no hint value is passed, it is _default_. If the hint is _default_, it returns a shallow clone (the same with the
+_shallow_ hint).
 
 This method follows the following steps:
 
 - If it is a primitive, it returns it.
 
 ```typescript
-console.log(defaultClone.call("foo")); // Throws
+console.log(defaultClone.call('foo')) // Throws
 
-const obj = { foo: "foo" };
+const obj = { foo: 'foo' }
 
-console.log(defaultClone.call(obj)); // Object { foo: 'foo' }
+console.log(defaultClone.call(obj)) // Object { foo: 'foo' }
 ```
 
 - If it is a function, it returns it.
 
 ```typescript
-console.log(defaultClone.call(() => "foo")); // Function () => 'foo'
+console.log(defaultClone.call(() => 'foo')) // Function () => 'foo'
 
-const obj = { foo: () => "foo" };
+const obj = { foo: () => 'foo' }
 
-console.log(defaultClone.call(obj)); // Object { foo: Function () => 'foo' }
+console.log(defaultClone.call(obj)) // Object { foo: Function () => 'foo' }
 ```
 
 - If it is an object or array, it creates a mutable copy.
 
 ```typescript
-console.log(defaultClone.call(Object.freeze(["foo", "bar"]))); // Array ['foo', 'bar']
+console.log(defaultClone.call(Object.freeze(['foo', 'bar']))) // Array ['foo', 'bar']
 
-const obj = Object.freeze({ foo: "foo" });
+const obj = Object.freeze({ foo: 'foo' })
 
-const clone = defaultClone.call(obj);
+const clone = defaultClone.call(obj)
 
-console.log(clone); // Object { foo: 'foo' }
-console.log(Object.isFrozen(clone)); // false
+console.log(clone) // Object { foo: 'foo' }
+console.log(Object.isFrozen(clone)) // false
 ```
 
 ## Implementations
 
 ### Interface
 
-Interface that defines how to implement the mutable clone method. See
-[definition](#definition).
+Interface that defines how to implement the mutable clone method. See [definition](#definition).
 
 ```typescript
-import type { IMutableClone } from "prtcl/interfaces";
+import type { IMutableClone } from 'prtcl/interfaces'
 
 declare class List {
-  constructor(list: string[]);
+	constructor(list: string[])
 
-  get list(): string[];
+	get list(): string[]
 
-  addd(item: string): void;
+	addd(item: string): void
 
-  remove(item: string);
-  void;
+	remove(item: string)
+	void
 }
 
 class ReadonlyList implements IMutableClone<List> {
-  constructor(list: string[]) {
-    // ...
-  }
+	constructor(list: string[]) {
+		// ...
+	}
 
-  get list() {
-    // ...
-  }
+	get list() {
+		// ...
+	}
 
-  [Prtcl.toMutableClone]() {
-    return new List(this.list);
-  }
+	[Prtcl.toMutableClone]() {
+		return new List(this.list)
+	}
 }
 ```
 
@@ -183,41 +182,40 @@ class ReadonlyList implements IMutableClone<List> {
 Abstract Class that defines how to implement the mutable clone method.
 
 ```typescript
-import { MutableClonable } from "prtcl/classes";
+import { MutableClonable } from 'prtcl/classes'
 
 class ReadonlyList implements MutableClonable<List> {
-  constructor(list: string[]) {
-    // ...
-  }
+	constructor(list: string[]) {
+		// ...
+	}
 
-  get list() {
-    // ...
-  }
+	get list() {
+		// ...
+	}
 
-  [Prtcl.toMutableClone]() {
-    return new List(this.list);
-  }
+	[Prtcl.toMutableClone]() {
+		return new List(this.list)
+	}
 }
 ```
 
 ### Base Class
 
-Class with a basic implementation of the clone method. Uses the
-[defaultClone](#default-method) internally.
+Class with a basic implementation of the clone method. Uses the [defaultClone](#default-method) internally.
 
 ```typescript
-import { BaseMutableClonable } from "prtcl/classes";
+import { BaseMutableClonable } from 'prtcl/classes'
 
 class ReadonlyUser extends BaseMutableClonable {
-  readonly id: string;
-  readonly email: string;
-  readonly name: string;
+	readonly id: string
+	readonly email: string
+	readonly name: string
 
-  constructor(id: string, email: string, name: string) {
-    this.id = id;
-    this.email = email;
-    this.name = name;
-  }
+	constructor(id: string, email: string, name: string) {
+		this.id = id
+		this.email = email
+		this.name = name
+	}
 }
 ```
 
@@ -228,28 +226,28 @@ Class decorator that receives a function to define how to clone the object.
 This implementation does not provide typing over the method.
 
 ```typescript
-import { mutableCloneBy } from "prtcl/methods";
+import { mutableCloneBy } from 'prtcl/methods'
 
 declare class List {
-  constructor(list: string[]);
+	constructor(list: string[])
 
-  get list(): string[];
+	get list(): string[]
 
-  addd(item: string): void;
+	addd(item: string): void
 
-  remove(item: string);
-  void;
+	remove(item: string)
+	void
 }
 
 @mutableCloneBy((instance) => new Foo(instance.list))
 class ReadonlyList {
-  constructor(list: string[]) {
-    // ...
-  }
+	constructor(list: string[]) {
+		// ...
+	}
 
-  get list() {
-    // ...
-  }
+	get list() {
+		// ...
+	}
 }
 ```
 
@@ -260,31 +258,31 @@ Method decorator that uses the method as the value of `Prtcl.toReadonlyClone`.
 This implementation does not provide typing over the method.
 
 ```typescript
-import { useToMutableClone } from "prtcl/methods";
+import { useToMutableClone } from 'prtcl/methods'
 
 declare class List {
-  constructor(list: string[]);
+	constructor(list: string[])
 
-  get list(): string[];
+	get list(): string[]
 
-  addd(item: string): void;
+	addd(item: string): void
 
-  remove(item: string);
-  void;
+	remove(item: string)
+	void
 }
 
 class ReadonlyList {
-  constructor(list: string[]) {
-    // ...
-  }
+	constructor(list: string[]) {
+		// ...
+	}
 
-  get list() {
-    // ...
-  }
+	get list() {
+		// ...
+	}
 
-  @useToMutableClone
-  customMutableClone() {
-    return new List(this.list);
-  }
+	@useToMutableClone
+	customMutableClone() {
+		return new List(this.list)
+	}
 }
 ```

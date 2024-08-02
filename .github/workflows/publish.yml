@@ -13,6 +13,14 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Publish @prtcl/prtcl
-        run: cd packages/prtcl; npx jsr publish
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Setup deno
+        run: denoland/setup-deno@1
+
+      - name: Format
+        run: deno task fmt:check
+
+      - name: Publish packages
+        run: deno publish

@@ -1,5 +1,5 @@
-import { assert, assertEquals, assertInstanceOf } from 'jsr:@std/assert'
-import { describe, test } from 'jsr:@std/testing/bdd'
+import { assert, assertEquals, assertInstanceOf } from '@std/assert'
+import { describe, test } from '@std/testing/bdd'
 import { useCompareTo, useEqualsTo, useToClone, useToFlat, useToMutableClone, useToReadonlyClone } from './methods.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 import type * as Extend from '../extend.ts'

@@ -1,30 +1,23 @@
 {
-  "name": "@prtcl/prtcl",
-  "version": "1.0.2",
-  "publish": {
-    "exclude": ["test", "docs", "src/**/*.test.ts"]
-  },
-  "exports": {
-    ".": "./src/mod.ts",
-    "./decorators": "./src/decorators/mod.ts",
-    "./decorators/classes": "./src/decorators/classes.ts",
-    "./decorators/methods": "./src/decorators/methods.ts",
-    "./classes": "./src/classes/mod.ts",
-    "./interfaces": "./src/interfaces.ts",
-    "./js-symbols": "./src/native/mod.ts",
-    "./js-symbols/interfaces": "./src/native/interfaces.ts",
-    "./js-symbols/types": "./src/native/types.ts",
-    "./methods": "./src/methods.ts",
-    "./types": "./src/types.ts"
-  },
-  "imports": {
-    "test:utils": "./test/utils.ts"
-  },
-  "fmt": {
-    "useTabs": true,
-    "lineWidth": 120,
-    "semiColons": false,
-    "indentWidth": 2,
-    "singleQuote": true
-  }
+	"name": "@prtcl/prtcl",
+	"version": "1.0.2",
+	"publish": {
+		"exclude": ["test", "docs", "src/**/*.test.ts"]
+	},
+	"exports": {
+		".": "./src/mod.ts",
+		"./decorators": "./src/decorators/mod.ts",
+		"./decorators/classes": "./src/decorators/classes.ts",
+		"./decorators/methods": "./src/decorators/methods.ts",
+		"./classes": "./src/classes/mod.ts",
+		"./interfaces": "./src/interfaces.ts",
+		"./js-symbols": "./src/native/mod.ts",
+		"./js-symbols/interfaces": "./src/native/interfaces.ts",
+		"./js-symbols/types": "./src/native/types.ts",
+		"./methods": "./src/methods.ts",
+		"./types": "./src/types.ts"
+	},
+	"imports": {
+		"test:utils": "./test/utils.ts"
+	}
 }

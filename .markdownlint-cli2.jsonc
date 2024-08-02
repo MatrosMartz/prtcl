@@ -1,13 +1,16 @@
 {
-  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
-  "config": {
-    "default": true,
-    "MD013": {
-      "line_length": 120,
-      "code_block_line_length": 120
-    },
-    "MD033": {
-      "allowed_elements": ["details", "summary"]
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
+	"config": {
+		"default": true,
+		"MD010": {
+			"code_blocks": false
+		},
+		"MD013": {
+			"line_length": 120,
+			"code_block_line_length": 120
+		},
+		"MD033": {
+			"allowed_elements": ["details", "summary"]
+		}
+	}
 }
