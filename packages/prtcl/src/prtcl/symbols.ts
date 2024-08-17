@@ -21,7 +21,7 @@
 * ```
 
  */
-export const toClone = Symbol('Prtcl.toClone')
+export const toClone = Symbol.for('Prtcl.toClone')
 
 /**
 
@@ -40,7 +40,7 @@ export const toClone = Symbol('Prtcl.toClone')
 * ```
 
  */
-export const compareTo = Symbol('Prtcl.compareTo')
+export const compareTo = Symbol.for('Prtcl.compareTo')
 
 /**
 
@@ -59,7 +59,7 @@ export const compareTo = Symbol('Prtcl.compareTo')
 * ```
 
  */
-export const equalsTo = Symbol('Prtcl.equalsTo')
+export const equalsTo = Symbol.for('Prtcl.equalsTo')
 
 /**
 
@@ -78,7 +78,7 @@ export const equalsTo = Symbol('Prtcl.equalsTo')
 * ```
 
  */
-export const toFlat = Symbol('toFlat')
+export const toFlat = Symbol.for('toFlat')
 
 /**
 
@@ -97,7 +97,7 @@ export const toFlat = Symbol('toFlat')
 * ```
 
  */
-export const toMutableClone = Symbol('Prtcl.toMutableClone')
+export const toMutableClone = Symbol.for('Prtcl.toMutableClone')
 
 /**
 
@@ -116,7 +116,7 @@ export const toMutableClone = Symbol('Prtcl.toMutableClone')
 * ```
 
  */
-export const toReadonlyClone = Symbol('Prtcl.toReadonlyClone')
+export const toReadonlyClone = Symbol.for('Prtcl.toReadonlyClone')
 
 /**
 
@@ -135,7 +135,7 @@ export const toReadonlyClone = Symbol('Prtcl.toReadonlyClone')
 * ```
 
  */
-// TODO: export const toSerialize = Symbol("Prtcl.toSerialize");
+// TODO: export const toSerialize = Symbol.for("Prtcl.toSerialize");
 
 /**
 
@@ -159,8 +159,8 @@ export const toReadonlyClone = Symbol('Prtcl.toReadonlyClone')
 * ```
 
  */
-// TODO: export const fromSerialize = Symbol("Prtcl.fromSerialize");
+// TODO: export const fromSerialize = Symbol.for("Prtcl.fromSerialize");
 
-// TODO: export const toLog = Symbol("Prtcl.toLog");
+// TODO: export const toLog = Symbol.for("Prtcl.toLog");
 
-// TODO: export const resetThis = Symbol("Prtcl.resetThis");
+// TODO: export const resetThis = Symbol.for("Prtcl.resetThis");
