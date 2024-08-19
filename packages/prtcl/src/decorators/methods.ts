@@ -1,16 +1,14 @@
 /**
-
-* This module defines decorators that use the decorated method as the value of the prtcl methods.
-* @module
+ * This module defines decorators that use the decorated method as the value of the prtcl methods.
+ * @module
  */
 
 import * as Prtcl from '../prtcl/mod.ts'
 /**
-
-* Ensured if field or method is a function.
-* @param value The field or method.
-* @param protocol The protocol name.
-* @throws If the value not is a function, throw error in message the protocol name.
+ * Ensured if field or method is a function.
+ * @param value The field or method.
+ * @param protocol The protocol name.
+ * @throws If the value not is a function, throw error in message the protocol name.
  */
 function checkIfIsFunction(
 	value: unknown,
@@ -24,10 +22,9 @@ function checkIfIsFunction(
 }
 
 /**
-
-* Use the method class as `Prtcl.toClone` method.
-* @param target The method that returns it's copy.
-* @param ctx The decorator context.
+ * Use the method class as `Prtcl.toClone` method.
+ * @param target The method that returns it's copy.
+ * @param ctx The decorator context.
  */
 export function useToClone(target: () => unknown, ctx: DecoratorContext): void {
 	checkIfIsFunction(target, 'clone')
@@ -38,10 +35,9 @@ export function useToClone(target: () => unknown, ctx: DecoratorContext): void {
 }
 
 /**
-
-* Use the method that to passed as `Prtcl.compareTo` method.
-* @param value The method receives other value and returns diference in number value.
-* @param ctx The decorator context.
+ * Use the method that to passed as `Prtcl.compareTo` method.
+ * @param value The method receives other value and returns diference in number value.
+ * @param ctx The decorator context.
  */
 export function useCompareTo<T>(value: (other: T) => number, ctx: DecoratorContext): void {
 	checkIfIsFunction(value, 'compare')
@@ -52,10 +48,9 @@ export function useCompareTo<T>(value: (other: T) => number, ctx: DecoratorConte
 }
 
 /**
-
-* Use the method that to passed as `Prtcl.equalsTo` method.
-* @param value The method receives other value and returns if self and other are equals.
-* @param ctx The decorator context.
+ * Use the method that to passed as `Prtcl.equalsTo` method.
+ * @param value The method receives other value and returns if self and other are equals.
+ * @param ctx The decorator context.
  */
 export function useEqualsTo(value: (other: unknown) => boolean, ctx: DecoratorContext): void {
 	checkIfIsFunction(value, 'equals')
@@ -66,10 +61,9 @@ export function useEqualsTo(value: (other: unknown) => boolean, ctx: DecoratorCo
 }
 
 /**
-
-* Use the method that to passed as `Prtcl.toMutable` method.
-* @param target The method that returns it's mutable copy.
-* @param ctx The decorator context.
+ * Use the method that to passed as `Prtcl.toMutable` method.
+ * @param target The method that returns it's mutable copy.
+ * @param ctx The decorator context.
  */
 export function useToMutableClone(target: () => unknown, ctx: DecoratorContext): void {
 	checkIfIsFunction(target, 'mutableClone')
@@ -80,10 +74,9 @@ export function useToMutableClone(target: () => unknown, ctx: DecoratorContext):
 }
 
 /**
-
-* Use the method that to passed as `Prtcl.toReadonly` method.
-* @param target The method that returns it's readonly copy.
-* @param ctx The decorator context.
+ * Use the method that to passed as `Prtcl.toReadonly` method.
+ * @param target The method that returns it's readonly copy.
+ * @param ctx The decorator context.
  */
 export function useToReadonlyClone(target: () => unknown, ctx: DecoratorContext): void {
 	checkIfIsFunction(target, 'readonlyClone')
@@ -94,10 +87,9 @@ export function useToReadonlyClone(target: () => unknown, ctx: DecoratorContext)
 }
 
 /**
-
-* Use the method that to passed as `Prtcl.toUnwrap` method.
-* @param target The method that returns it's unwrap data.
-* @param ctx The decorator context.
+ * Use the method that to passed as `Prtcl.toUnwrap` method.
+ * @param target The method that returns it's unwrap data.
+ * @param ctx The decorator context.
  */
 export function useToUnwrap(target: () => unknown, ctx: DecoratorContext): void {
 	checkIfIsFunction(target, 'unwrap')
