@@ -1,15 +1,15 @@
 import type { Primitives } from './native/mod.ts'
 
-/** Flat object type, only allows as values the same, plain array or primitives. */
-export type FlatRecord = {
-	readonly [key: string | number]: FlatData
+/** Unwrap object type, only allows as values the same, unwrap array or primitives. */
+export type UnwrapRecord = {
+	readonly [key: string | number]: UnwrapData
 }
 
-/** Flat array type, only allows as values the same, plain record or primitives. */
-export type FlatArray = ReadonlyArray<FlatData>
+/** Unwrap array type, only allows as values the same, unwrap record or primitives. */
+export type UnwrapArray = ReadonlyArray<UnwrapData>
 
-/** Flat object or Primitives. */
-export type FlatData = FlatArray | FlatRecord | Primitives
+/** Unwrap object or Primitives. */
+export type UnwrapData = UnwrapArray | UnwrapRecord | Primitives
 
 /** Type cloning. */
 export type CloneHint = 'deep' | 'default' | 'shallow'

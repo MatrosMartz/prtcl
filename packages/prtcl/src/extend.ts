@@ -4,8 +4,8 @@
 * @module
  */
 
-import type { IClone, ICompare, IEquals, IFlat, IMutableClone, IReadonlyClone } from './interfaces.ts'
-import type { FlatData } from './types.ts'
+import type { IClone, ICompare, IEquals, IMutableClone, IReadonlyClone, IUnwrap } from './interfaces.ts'
+import type { UnwrapData } from './types.ts'
 
 /**
 
@@ -31,14 +31,6 @@ export type Equals<T> = T & IEquals
 
 /**
 
-* Adds `Prtcl.toFlat` methods to the type passed to it.
-* @template T The type passed.
-* @template Data The flattened data type.
- */
-export type Flat<T, Data extends FlatData> = T & IFlat<Data>
-
-/**
-
 * Adds `Prtcl.toMutable` methods to the type passed to it.
 * @template T The type passed.
 * @template MutableCopy The mutable copy type.
@@ -52,3 +44,11 @@ export type MutableClone<T, MutableCopy> = T & IMutableClone<MutableCopy>
 * @template ReadonlyCopy The readonly copy type.
  */
 export type ReadonlyClone<T, ReadonlyCopy> = T & IReadonlyClone<ReadonlyCopy>
+
+/**
+
+* Adds `Prtcl.toUnwrap` methods to the type passed to it.
+* @template T The type passed.
+* @template Data The unwrapened data type.
+ */
+export type Unwrap<T, Data extends UnwrapData> = T & IUnwrap<Data>

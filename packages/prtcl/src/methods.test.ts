@@ -15,13 +15,13 @@ import {
 	defaultClone,
 	defaultCompare,
 	defaultEquals,
-	defaultFlat,
 	defaultMutableClone,
 	defaultReadonlyClone,
+	defaultUnwrap,
 } from './methods.ts'
 import { getRandomInt, getRandomPrimitive } from 'test:utils'
 
-import type { FlatData } from './types.ts'
+import type { UnwrapData } from './types.ts'
 
 describe('defaultClone', () => {
 	test('Should thrown if called by a primitive', () => {
@@ -155,161 +155,6 @@ describe('defaultEquals', () => {
 	})
 })
 
-describe('defaultFlat', () => {
-	test('Should return blank object, if called by blank object', () => {
-		const obj = {}
-
-		assertEquals(defaultFlat.call(obj) as object, {})
-	})
-
-	test('Should return copy of object with methods remove', () => {
-		const obj = {
-			property: 'foo',
-			get getter() {
-				return 'bar'
-			},
-			method() {
-				return 'baz'
-			},
-		}
-
-		assertEquals(defaultFlat.call(obj) as object, { property: 'foo', getter: 'bar' })
-	})
-
-	test('Should return object with bigint value property', () => {
-		const obj = { property: 456n }
-
-		assertEquals(defaultFlat.call(obj) as object, { property: 456n })
-	})
-
-	test('Should return object with symbol value property', () => {
-		const sym = Symbol('test.sym')
-		const obj = { property: sym }
-
-		assertEquals(defaultFlat.call(obj) as object, { property: sym })
-	})
-
-	test('Should return deep flat object', () => {
-		const obj = {
-			foo: 'foo',
-			bar: {
-				method: () => 'bar',
-				bar_prop: 'bar',
-				baz: {
-					get getter() {
-						return 'baz'
-					},
-					baz_prop: 'baz',
-				},
-			},
-		}
-
-		assertEquals(defaultFlat.call(obj) as object, {
-			foo: 'foo',
-			bar: { bar_prop: 'bar', baz: { getter: 'baz', baz_prop: 'baz' } },
-		})
-	})
-
-	test('Should return flat entries, if called with map', () => {
-		const map = new Map([['prop1', 'foo'], ['prop2', 'bar']])
-
-		assertEquals(defaultFlat.call(map), [['prop1', 'foo'], ['prop2', 'bar']])
-	})
-
-	test('Should return flat object, if called with class instance', () => {
-		class Foo<T extends string, U extends string> {
-			public: T
-			#private: U
-			constructor(_public: T, _private: U) {
-				this.public = _public
-				this.#private = _private
-			}
-
-			get private() {
-				return this.#private
-			}
-
-			method() {
-				return this.private + ' ' + this.public
-			}
-		}
-		const foo = new Foo('hello', 'world')
-
-		assertEquals(defaultFlat.call(foo), { public: 'hello', private: 'world' })
-	})
-
-	test('Should work with circular references', () => {
-		const obj: Record<string, unknown> = {
-			get value() {
-				return "i'm the parent"
-			},
-		}
-
-		obj.son = {
-			parent: obj,
-			get value() {
-				return "i'm the son"
-			},
-		}
-
-		const expectObj: Record<string, FlatData> = {
-			value: "i'm the parent",
-		}
-
-		expectObj.son = {
-			parent: expectObj,
-			value: "i'm the son",
-		}
-
-		assertEquals(defaultFlat.call(obj), expectObj)
-	})
-
-	test('Should called "toJSON" method', () => {
-		const date = new Date()
-
-		assertEquals(defaultFlat.call(date), date.toJSON())
-
-		const obj = { date }
-
-		assertEquals(defaultFlat.call(obj), { date: date.toJSON() })
-	})
-
-	test('Should ignore "toJSON" method if they are the same function `defaultFlat`', () => {
-		const jsonParseable = { toJSON: defaultFlat, value: 'foo' }
-
-		assertEquals(defaultFlat.call(jsonParseable), { value: 'foo' })
-	})
-
-	describe('Unwrap Primivites objects', () => {
-		test('Should return string if called by String object', () => {
-			const str = Object('foo')
-
-			assertEquals(defaultFlat.call(str), 'foo')
-			assertEquals(defaultFlat.call({ str }), { str: 'foo' })
-		})
-		test('Should return string if called by Boolean object', () => {
-			const bool = Object(false)
-			assertEquals(defaultFlat.call(bool), false)
-			assertEquals(defaultFlat.call({ bool }), { bool: false })
-		})
-		test('Should return string if called by Number object', () => {
-			const num = Object(123)
-			assertEquals(defaultFlat.call(num), 123)
-			assertEquals(defaultFlat.call({ num }), { num: 123 })
-		})
-		test('Should return string if called by Symbol object', () => {
-			const sym = Object(Symbol.for('test.sym'))
-			assertEquals(defaultFlat.call(sym), Symbol.for('test.sym'))
-			assertEquals(defaultFlat.call({ sym }), { sym: Symbol.for('test.sym') })
-		})
-		test('Should return string if called by BigInt object', () => {
-			const int = Object(456n)
-			assertEquals(defaultFlat.call(int), 456n)
-			assertEquals(defaultFlat.call({ int }), { int: 456n })
-		})
-	})
-})
-
 describe('defaultMutableClone', () => {
 	test('Should return blank object, if called by blank object', () => {
 		const readonlyObj = Object.freeze({})
@@ -414,6 +259,161 @@ describe('defaultReadonlyClone', () => {
 		assertThrows(() => {
 			// @ts-expect-error: This throws
 			deepclone.foo.bar.baz = 'edited'
+		})
+	})
+})
+
+describe('defaultUnwrap', () => {
+	test('Should return blank object, if called by blank object', () => {
+		const obj = {}
+
+		assertEquals(defaultUnwrap.call(obj) as object, {})
+	})
+
+	test('Should return copy of object with methods remove', () => {
+		const obj = {
+			property: 'foo',
+			get getter() {
+				return 'bar'
+			},
+			method() {
+				return 'baz'
+			},
+		}
+
+		assertEquals(defaultUnwrap.call(obj) as object, { property: 'foo', getter: 'bar' })
+	})
+
+	test('Should return object with bigint value property', () => {
+		const obj = { property: 456n }
+
+		assertEquals(defaultUnwrap.call(obj) as object, { property: 456n })
+	})
+
+	test('Should return object with symbol value property', () => {
+		const sym = Symbol('test.sym')
+		const obj = { property: sym }
+
+		assertEquals(defaultUnwrap.call(obj) as object, { property: sym })
+	})
+
+	test('Should return deep unwrap object', () => {
+		const obj = {
+			foo: 'foo',
+			bar: {
+				method: () => 'bar',
+				bar_prop: 'bar',
+				baz: {
+					get getter() {
+						return 'baz'
+					},
+					baz_prop: 'baz',
+				},
+			},
+		}
+
+		assertEquals(defaultUnwrap.call(obj) as object, {
+			foo: 'foo',
+			bar: { bar_prop: 'bar', baz: { getter: 'baz', baz_prop: 'baz' } },
+		})
+	})
+
+	test('Should return unwrap entries, if called with map', () => {
+		const map = new Map([['prop1', 'foo'], ['prop2', 'bar']])
+
+		assertEquals(defaultUnwrap.call(map), [['prop1', 'foo'], ['prop2', 'bar']])
+	})
+
+	test('Should return unwrap object, if called with class instance', () => {
+		class Foo<T extends string, U extends string> {
+			public: T
+			#private: U
+			constructor(_public: T, _private: U) {
+				this.public = _public
+				this.#private = _private
+			}
+
+			get private() {
+				return this.#private
+			}
+
+			method() {
+				return this.private + ' ' + this.public
+			}
+		}
+		const foo = new Foo('hello', 'world')
+
+		assertEquals(defaultUnwrap.call(foo), { public: 'hello', private: 'world' })
+	})
+
+	test('Should work with circular references', () => {
+		const obj: Record<string, unknown> = {
+			get value() {
+				return "i'm the parent"
+			},
+		}
+
+		obj.son = {
+			parent: obj,
+			get value() {
+				return "i'm the son"
+			},
+		}
+
+		const expectObj: Record<string, UnwrapData> = {
+			value: "i'm the parent",
+		}
+
+		expectObj.son = {
+			parent: expectObj,
+			value: "i'm the son",
+		}
+
+		assertEquals(defaultUnwrap.call(obj), expectObj)
+	})
+
+	test('Should called "toJSON" method', () => {
+		const date = new Date()
+
+		assertEquals(defaultUnwrap.call(date), date.toJSON())
+
+		const obj = { date }
+
+		assertEquals(defaultUnwrap.call(obj), { date: date.toJSON() })
+	})
+
+	test('Should ignore "toJSON" method if they are the same function `defaultUnwrap`', () => {
+		const jsonParseable = { toJSON: defaultUnwrap, value: 'foo' }
+
+		assertEquals(defaultUnwrap.call(jsonParseable), { value: 'foo' })
+	})
+
+	describe('Unwrap Primivites objects', () => {
+		test('Should return string if called by String object', () => {
+			const str = Object('foo')
+
+			assertEquals(defaultUnwrap.call(str), 'foo')
+			assertEquals(defaultUnwrap.call({ str }), { str: 'foo' })
+		})
+		test('Should return string if called by Boolean object', () => {
+			const bool = Object(false)
+			assertEquals(defaultUnwrap.call(bool), false)
+			assertEquals(defaultUnwrap.call({ bool }), { bool: false })
+		})
+		test('Should return string if called by Number object', () => {
+			const num = Object(123)
+			assertEquals(defaultUnwrap.call(num), 123)
+			assertEquals(defaultUnwrap.call({ num }), { num: 123 })
+		})
+		test('Should return string if called by Symbol object', () => {
+			const sym = Object(Symbol.for('test.sym'))
+			assertEquals(defaultUnwrap.call(sym), Symbol.for('test.sym'))
+			assertEquals(defaultUnwrap.call({ sym }), { sym: Symbol.for('test.sym') })
+		})
+		test('Should return string if called by BigInt object', () => {
+			const int = Object(456n)
+			assertEquals(defaultUnwrap.call(int), 456n)
+			assertEquals(defaultUnwrap.call({ int }), { int: 456n })
 		})
 	})
 })

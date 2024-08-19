@@ -6,8 +6,8 @@
 
 import { toObject } from '../utils.ts'
 import type * as Extends from '../extend.ts'
-import { compareTo, equalsTo, toClone, toFlat, toMutableClone, toReadonlyClone } from './symbols.ts'
-import type { FlatData } from '../types.ts'
+import { compareTo, equalsTo, toClone, toMutableClone, toReadonlyClone, toUnwrap } from './symbols.ts'
+import type { UnwrapData } from '../types.ts'
 
 interface Implements<T = unknown> {
 	clone: Extends.Clone<T>
@@ -15,7 +15,7 @@ interface Implements<T = unknown> {
 	equals: Extends.Equals<T>
 	mutableClone: Extends.MutableClone<T, unknown>
 	readonlyClone: Extends.ReadonlyClone<T, unknown>
-	flat: Extends.Flat<T, FlatData>
+	unwrap: Extends.Unwrap<T, UnwrapData>
 }
 
 export type ProtocolName = keyof Implements
@@ -43,12 +43,12 @@ export function impl<T, PN extends ProtocolName>(
 			return compareTo in obj && typeof obj[compareTo] === 'function'
 		case 'equals':
 			return equalsTo in obj && typeof obj[equalsTo] === 'function'
-		case 'flat':
-			return toFlat in obj && typeof obj[toFlat] === 'function'
 		case 'mutableClone':
 			return toMutableClone in obj && typeof obj[toMutableClone] === 'function'
 		case 'readonlyClone':
 			return toReadonlyClone in obj && typeof obj[toReadonlyClone] === 'function'
+		case 'unwrap':
+			return toUnwrap in obj && typeof obj[toUnwrap] === 'function'
 	}
 
 	throw new Error(`The protocol: "${String(protocol)}" not exist in Prtcl`)

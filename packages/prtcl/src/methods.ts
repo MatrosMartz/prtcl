@@ -4,8 +4,14 @@
 * @module
  */
 import type { Primitives } from './native/types.ts'
-import type { CloneHint, FlatData, Mutable } from './types.ts'
-import { createCopyOutPut, createFlatOutPut, getCopyItemsStack, getFlatItemsStack, isPrimitiveWraper } from './utils.ts'
+import type { CloneHint, Mutable, UnwrapData } from './types.ts'
+import {
+	createCopyOutPut,
+	createUnwrapOutPut,
+	getCopyItemsStack,
+	getUnwrapItemsStack,
+	isPrimitiveWraper,
+} from './utils.ts'
 
 /**
 
@@ -143,79 +149,6 @@ export function defaultEquals(this: object, other: unknown): boolean {
 
 /**
 
-* Default implementation of the `Prtcl.toFlat` method.
-*
-* If the object has the method `Prtcl.toFlat`, calls it.
-* If the object has the method 'toJSON', calls it.
-* Does not call them if they refer to this function.
-* If the object is iterable, transforms it to an array, otherwise to an object.
-*
-* @return Fattened data.
-* @example
-* ```typescript
-
-* const foo = {
-* field: 1,
-* get getter() {
-*     return 'bar';
-* },
-* method() {},
-* };
-*
-* const fooFlated = Serialize.flat(foo); // Calls inside the Prtcl.toFlat method
-* console.log(fooFlated); // Object { field: 1, getter: 'bar'}
-* ```
-
- */
-export function defaultFlat(this: object): FlatData {
-	if (typeof this === 'function') return undefined
-	if (isPrimitiveWraper(this)) return this.valueOf()
-	if ('toJSON' in this && typeof this.toJSON === 'function' && defaultFlat !== this.toJSON) return this.toJSON()
-
-	const result = createFlatOutPut(this)
-
-	const visited = new WeakMap([[this, result]])
-
-	const stack = getFlatItemsStack(this)
-
-	while (stack.length > 0) {
-		const { key, parent, value } = stack.pop()!
-
-		if (typeof value === 'function') continue
-
-		const flatParent = visited.get(parent)
-
-		if (flatParent == null) throw new Error('FlatParent not defined')
-
-		if (Reflect.has(flatParent, key)) continue
-
-		let flatValue: FlatData
-
-		if (typeof value === 'object' && value != null) {
-			if (isPrimitiveWraper(value)) {
-				flatValue = value.valueOf()
-			} else if ('toJSON' in value && typeof value.toJSON === 'function' && defaultFlat != value.toJSON) {
-				flatValue = value.toJSON()
-			} else {
-				if (!visited.has(value)) {
-					visited.set(value, createFlatOutPut(value))
-					stack.push(...getFlatItemsStack(value))
-				}
-
-				flatValue = visited.get(value)
-			}
-		} else {
-			flatValue = value as Primitives
-		}
-
-		;(flatParent as Record<string | number, unknown>)[key] = flatValue
-	}
-
-	return result as FlatData
-}
-
-/**
-
 * Default implementation of the `Prtcl.toMutableClone` method.
 *
 * Only works with public fields.
@@ -329,4 +262,77 @@ export function defaultReadonlyClone<T extends object>(this: T, hint: CloneHint 
 	}
 
 	return Object.freeze(result) as Readonly<T>
+}
+
+/**
+
+* Default implementation of the `Prtcl.toUnwrap` method.
+*
+* If the object has the method `Prtcl.toUnwrap`, calls it.
+* If the object has the method 'toJSON', calls it.
+* Does not call them if they refer to this function.
+* If the object is iterable, transforms it to an array, otherwise to an object.
+*
+* @return Unwrapened data.
+* @example
+* ```typescript
+
+* const foo = {
+* field: 1,
+* get getter() {
+*     return 'bar';
+* },
+* method() {},
+* };
+*
+* const fooUnwraped = Serialize.unwrap(foo); // Calls inside the Prtcl.toUnwrap method
+* console.log(fooUnwraped); // Object { field: 1, getter: 'bar'}
+* ```
+
+ */
+export function defaultUnwrap(this: object): UnwrapData {
+	if (typeof this === 'function') return undefined
+	if (isPrimitiveWraper(this)) return this.valueOf()
+	if ('toJSON' in this && typeof this.toJSON === 'function' && defaultUnwrap !== this.toJSON) return this.toJSON()
+
+	const result = createUnwrapOutPut(this)
+
+	const visited = new WeakMap([[this, result]])
+
+	const stack = getUnwrapItemsStack(this)
+
+	while (stack.length > 0) {
+		const { key, parent, value } = stack.pop()!
+
+		if (typeof value === 'function') continue
+
+		const unwrapParent = visited.get(parent)
+
+		if (unwrapParent == null) throw new Error('UnwrapParent not defined')
+
+		if (Reflect.has(unwrapParent, key)) continue
+
+		let unwrapValue: UnwrapData
+
+		if (typeof value === 'object' && value != null) {
+			if (isPrimitiveWraper(value)) {
+				unwrapValue = value.valueOf()
+			} else if ('toJSON' in value && typeof value.toJSON === 'function' && defaultUnwrap != value.toJSON) {
+				unwrapValue = value.toJSON()
+			} else {
+				if (!visited.has(value)) {
+					visited.set(value, createUnwrapOutPut(value))
+					stack.push(...getUnwrapItemsStack(value))
+				}
+
+				unwrapValue = visited.get(value)
+			}
+		} else {
+			unwrapValue = value as Primitives
+		}
+
+		;(unwrapParent as Record<string | number, unknown>)[key] = unwrapValue
+	}
+
+	return result as UnwrapData
 }

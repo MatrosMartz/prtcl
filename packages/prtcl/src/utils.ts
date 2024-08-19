@@ -4,9 +4,9 @@
 * @module
  */
 
-import type { FlatArray, FlatRecord } from './types.ts'
+import type { UnwrapArray, UnwrapRecord } from './types.ts'
 
-/** item for stack in defaultFlat function. */
+/** item for stack in defaultUnwrap and clone function. */
 interface StackItem {
 	parent: object
 	key: string | number
@@ -61,11 +61,11 @@ function isIterable(value: object): value is object & Iterable<unknown> {
 
 /**
 
-* Create flat output for some object.
+* Create unwrap output for some object.
 * @param value The object.
 * @return Empty array if object is iterable, empty object otherwise.
  */
-export function createFlatOutPut(value: object): FlatArray | FlatRecord {
+export function createUnwrapOutPut(value: object): UnwrapArray | UnwrapRecord {
 	if (isIterable(value)) return []
 	return {}
 }
@@ -94,11 +94,11 @@ function getItemState(arr: readonly unknown[], index: number): StackItem['state'
 
 /**
 
-* Gets items for flat stack, by parent object.
+* Gets items for unwrap stack, by parent object.
 * @param parent The parent object.
 * @return The all items.
  */
-export function getFlatItemsStack(parent: object): StackItem[] {
+export function getUnwrapItemsStack(parent: object): StackItem[] {
 	if (isIterable(parent)) {
 		return Array.from(parent).map<StackItem>((value, index, arr) => ({
 			value,

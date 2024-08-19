@@ -4,9 +4,9 @@
 * @module
  */
 
-import type { IClone, ICompare, IEquals, IFlat, IMutableClone, IReadonlyClone } from '../interfaces.ts'
+import type { IClone, ICompare, IEquals, IMutableClone, IReadonlyClone, IUnwrap } from '../interfaces.ts'
 import * as Prtcl from '../prtcl/mod.ts'
-import type { CloneHint, FlatData } from '../types.ts'
+import type { CloneHint, UnwrapData } from '../types.ts'
 import type {
 	// deno-lint-ignore no-unused-vars
 	BaseClonable,
@@ -18,6 +18,8 @@ import type {
 	BaseMutableClonable,
 	// deno-lint-ignore no-unused-vars
 	BaseReadonlyClonable,
+	// deno-lint-ignore no-unused-vars
+	BaseUnwrapeable,
 } from './base-classes.ts'
 
 /**
@@ -114,36 +116,6 @@ export abstract class Equatable implements IEquals {
 
 /**
 
-* Ensures implementation of the `Prtcl.toFlat` method.
-* @template Data The return type of `Prtcl.toFlat` method.
-* @example
-* ```typescript
-
-* class Foo extends Flateable<string> {
-* #value: string;
-*
-* contructor(value: string) {
-*     this.#value = value;
-* }
-*
-* [Prtcl.toFlat]() {
-*     return this.#value
-* }
-* }
-*
-* const foo = new Foo('foo');
-* const fooFlated = Serializable.flat(foo); // Call inside the Prtcl.toFlat method.
-* ```
-
-* This class is just one way to implement the method.
-* @see {@link IFlat} for an interface to ensure the implementation.
- */
-export abstract class Flateable<Data extends FlatData> implements IFlat<Data> {
-	abstract [Prtcl.toFlat](): Data
-}
-
-/**
-
 * Ensures implementation of the `Prtcl.toMutable` method.
 * @template MutableFoo The return type of `Prtcl.toMutable` method.
 * @example
@@ -202,6 +174,37 @@ export abstract class MutableClonable<MutableClone> implements IMutableClone<Mut
  */
 export abstract class ReadonlyClonable<ReadonlyClone> implements IReadonlyClone<ReadonlyClone> {
 	abstract [Prtcl.toReadonlyClone](hint: CloneHint): ReadonlyClone
+}
+
+/**
+
+* Ensures implementation of the `Prtcl.toUnwrap` method.
+* @template Data The return type of `Prtcl.toUnwrap` method.
+* @example
+* ```typescript
+
+* class Foo extends Unwrapeable<string> {
+* #value: string;
+*
+* contructor(value: string) {
+*     this.#value = value;
+* }
+*
+* [Prtcl.toUnwrap]() {
+*     return this.#value
+* }
+* }
+*
+* const foo = new Foo('foo');
+* const fooUnwraped = Serializable.unwrap(foo); // Call inside the Prtcl.toUnwrap method.
+* ```
+
+* This class is just one way to implement the method.
+* @see {@link BaseUnwrapeable} for basic implementacion.
+* @see {@link IUnwrap} for an interface to ensure the implementation.
+ */
+export abstract class Unwrapeable<Data extends UnwrapData> implements IUnwrap<Data> {
+	abstract [Prtcl.toUnwrap](): Data
 }
 
 // TODO: export abstract class Serializable {}

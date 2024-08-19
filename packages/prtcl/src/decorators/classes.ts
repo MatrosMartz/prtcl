@@ -121,35 +121,6 @@ export function equalsBy<C extends Class, T extends InstanceOf<C>>(
 
 /**
 
-* The function receives instance and returns it's flat data.
-* @template T The instance type.
-* @template U The flat data..
-* @param instance The object to optains data.
-* @return The flat data.
- */
-type FlatByCallback<T, U> = (instance: T) => U
-
-/**
-
-* Add to class the `Prtcl.toFlat` method.
-* @template T The instance type.
-* @param callback The function receives instance and returns it's flat data.
-* @return Class decorator.
- */
-export function flatBy<C extends Class, T extends InstanceOf<C>, U>(callback: FlatByCallback<T, U>): Decorator<C> {
-	return (target, ctx) => {
-		ensuredIfIsClass(ctx, 'flat')
-
-		Object.defineProperty(target.prototype, Prtcl.toFlat, {
-			value(this: T) {
-				return callback(this)
-			},
-		})
-	}
-}
-
-/**
-
 * The function receives instance and returns it's mutable copy.
 * @template T The instance type.
 * @template U The mutable clone type.
@@ -203,6 +174,35 @@ export function readonlyCloneBy<C extends Class, T extends InstanceOf<C>, U>(
 		ensuredIfIsClass(ctx, 'readonlyClone')
 
 		Object.defineProperty(value.prototype, Prtcl.toReadonlyClone, {
+			value(this: T) {
+				return callback(this)
+			},
+		})
+	}
+}
+
+/**
+
+* The function receives instance and returns it's unwrap data.
+* @template T The instance type.
+* @template U The unwrap data.
+* @param instance The object to optains data.
+* @return The unwrap data.
+ */
+type UnwrapByCallback<T, U> = (instance: T) => U
+
+/**
+
+* Add to class the `Prtcl.toUnwrap` method.
+* @template T The instance type.
+* @param callback The function receives instance and returns it's unwrap data.
+* @return Class decorator.
+ */
+export function unwrapBy<C extends Class, T extends InstanceOf<C>, U>(callback: UnwrapByCallback<T, U>): Decorator<C> {
+	return (target, ctx) => {
+		ensuredIfIsClass(ctx, 'unwrap')
+
+		Object.defineProperty(target.prototype, Prtcl.toUnwrap, {
 			value(this: T) {
 				return callback(this)
 			},

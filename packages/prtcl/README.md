@@ -77,12 +77,12 @@ Prtcl currently works with six methods, but plans are underway to add more in th
   object with another object, and returns the difference in a numerical value.
 - [Equals](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md) - Method that checks whether
   one object is equal to another.
-- [Flat](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md) - Method that unwraps an object
-  into its primitive values or into a flat object.
 - [Mutable Clone](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md) - Method that
   returns a mutable copy of the object.
 - [Readonly Clone](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md) - Method that
   returns a readonly copy of the object.
+- [Unwrap](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md) - Method that unwraps an object
+  into its primitive values or into a unwrap object.
 
 ### Guard function
 
@@ -127,7 +127,7 @@ direct use.
 - [Equals Default Method](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md#default-method)
 - [Mutable Clone Default Method](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md#clone-default-method)
 - [Readonly Clone Default Method](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md#clone-default-method)
-- [Flat Default Method](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md#default-method)
+- [Unwrap Default Method](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md#default-method)
 
 ## implementations
 
@@ -142,9 +142,9 @@ Useful in most cases, however if you work with classes you may be interested to 
 - [Clone Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/clone.md#interface)
 - [Compare Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/compare.md#interface)
 - [Equals Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md#interface)
-- [Flat Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md#interface)
 - [Mutable Clone Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md#interface)
 - [Readonly Clone Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md#interface)
+- [Unwrap Interface](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md#interface)
 
 ### Abstract Classes
 
@@ -153,9 +153,9 @@ Abstract classes to define how to implement the various methods of Prtcl, and la
 - [Clone Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/clone.md#abstract-class)
 - [Compare Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/compare.md#abstract-class)
 - [Equals Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md#abstract-class)
-- [Flat Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md#abstract-class)
 - [Mutable Clone Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md#abstract-class)
 - [Readonly Clone Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md#abstract-class)
+- [Unwrap Abstract Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md#abstract-class)
 
 ### Base Classes
 
@@ -164,9 +164,9 @@ Base classes that use the default methods internally. Not recommend using it bec
 - [Clone Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/clone.md#base-class)
 - [Compare Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/compare.md#base-class)
 - [Equals Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md#base-class)
-- [Flat Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md#base-class)
 - [Mutable Clone Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md#base-class)
 - [Readonly Clone Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md#base-class)
+- [Unwrap Base Class](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md#base-class)
 
 ### Class Decorators
 
@@ -178,9 +178,9 @@ Note that this implementation does not provide any typing to know that the class
 - [Clone Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/clone.md#class-decorator)
 - [Compare Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/compare.md#class-decorator)
 - [Equals Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md#class-decorator)
-- [Flat Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md#class-decorator)
 - [Mutable Clone Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md#class-decorator)
 - [Readonly Clone Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md#class-decorator)
+- [Unwrap Class Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md#class-decorator)
 
 ### Method Decorators
 
@@ -194,9 +194,9 @@ Note that this implementation does not provide any typing to know that the class
 - [Clone Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/clone.md#method-decorator)
 - [Compare Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/compare.md#method-decorator)
 - [Equals Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/equals.md#method-decorator)
-- [Flat Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/flat.md#method-decorator)
 - [Mutable Clone Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/mutable-clone.md#method-decorator)
 - [Readonly Clone Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/readonly-clone.md#method-decorator)
+- [Unwrap Method Decorator](https://github.com/MatrosMartz/prtcl/blob/main/packages/prtcl/docs/unwrap.md#method-decorator)
 
 ## Feedback
 

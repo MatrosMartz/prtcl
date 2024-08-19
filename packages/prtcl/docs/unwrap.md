@@ -1,10 +1,10 @@
-# Flat
+# Unwrap
 
 <!--toc:start-->
 
 ## Table of Contents
 
-- [Flat](#flat)
+- [Unwrap](#unwrap)
   - [Overview](#overview)
     - [Symbol](#symbol)
     - [Definition](#definition)
@@ -40,7 +40,7 @@ Its symbol is located inside the Prtcl object:
 ```typescript
 import { Prtcl } from 'prtcl'
 
-Prtcl.toFlat
+Prtcl.toUnwrap
 ```
 
 ### Definition
@@ -48,8 +48,8 @@ Prtcl.toFlat
 This interface defines how to implement the method:
 
 ```typescript
-interface IFlat<Data extends FlatData> {
-	[Prtcl.toFlat](): Data
+interface IUnwrap<Data extends UnwrapData> {
+	[Prtcl.toUnwrap](): Data
 }
 ```
 
@@ -58,8 +58,8 @@ interface IFlat<Data extends FlatData> {
 You can check if an object implements it in the following way:
 
 ```typescript
-if (Prtcl.impl('flat', obj)) {
-	// obj implements flat method
+if (Prtcl.impl('unwrap', obj)) {
+	// obj implements unwrap method
 }
 ```
 
@@ -72,23 +72,23 @@ import { Extend } from 'prtcl'
 
 declare const foo: Set<number>
 
-foo as Extend.Flat<Set<number>, number[]> // Set<number> & { [Prtcl.toFlat](): number[] }
+foo as Extend.Unwrap<Set<number>, number[]> // Set<number> & { [Prtcl.toUnwrap](): number[] }
 ```
 
 ### Default method
 
-Basic method to flat an object, not recommended for direct use.
+Basic method to unwrap an object, not recommended for direct use.
 
 ```typescript
 // Definition
-import type { FlatData } from 'prtcl/types'
+import type { UnwrapData } from 'prtcl/types'
 
-export function defaultFlat<T>(this: T): FlatData {
+export function defaultUnwrap<T>(this: T): UnwrapData {
 	return JSON.parse(JSON.stringify(this))
 }
 
 // use
-import { defaultFlat } from 'prtcl/methods'
+import { defaultUnwrap } from 'prtcl/methods'
 
 class Notes {
 	notes: string[] = []
@@ -101,7 +101,7 @@ class Notes {
 		notes = notes.filter((n) => note === n)
 	}
 
-	[Prtcl.toFlat] = defaultFlat
+	[Prtcl.toUnwrap] = defaultUnwrap
 }
 ```
 
@@ -110,54 +110,54 @@ This method follows the following steps:
 - If it is a primitive, it returns it as is.
 
 ```typescript
-console.log(defaultFlat.call('foo')) // Throws
+console.log(defaultUnwrap.call('foo')) // Throws
 
 const obj = { foo: 'foo' }
 
-console.log(defaultFlat.call(obj)) // Object { foo: 'foo' }
+console.log(defaultUnwrap.call(obj)) // Object { foo: 'foo' }
 ```
 
 - If it is a function, it returns undefined.
 
 ```typescript
-console.log(defaultFlat.call(() => {})) // undefined
+console.log(defaultUnwrap.call(() => {})) // undefined
 
 const obj = { foo: () => {} }
 
-console.log(defaultFlat.call(obj)) // Object { }
+console.log(defaultUnwrap.call(obj)) // Object { }
 ```
 
 - If the object extends wrapper classes (e.g. Number, String), it returns its primitive value.
 
 ```typescript
-console.log(defaultFlat.call(new String('foo'))) // 'foo'
+console.log(defaultUnwrap.call(new String('foo'))) // 'foo'
 
 const obj = { foo: new String('foo') }
 
-console.log(defaultFlat.call(obj)) // Object { foo: 'foo' }
+console.log(defaultUnwrap.call(obj)) // Object { foo: 'foo' }
 ```
 
 - If the object has the `toJSON` method, it returns its result.
 
 ```typescript
-console.log(defaultFlat.call(new Date('2024-07-31'))) // '2024-07-31T00:32:00.000Z'
+console.log(defaultUnwrap.call(new Date('2024-07-31'))) // '2024-07-31T00:32:00.000Z'
 
 const obj = { date: new Date('2024-07-31') }
 
-console.log(defaultFlat.call(obj)) // Object { date: '2024-07-31T00:32:00.000Z' }
+console.log(defaultUnwrap.call(obj)) // Object { date: '2024-07-31T00:32:00.000Z' }
 ```
 
 - If the object is iterable, it transforms it into an array (e.g. Maps and Sets).
 
 ```typescript
-console.log(defaultFlat.call(new Map([['foo', 1], ['bar', 2]]))) // Array [['foo', 1], ['bar', 2]]
+console.log(defaultUnwrap.call(new Map([['foo', 1], ['bar', 2]]))) // Array [['foo', 1], ['bar', 2]]
 
 const obj = { list: new Set(['foo', 'bar']) }
 
-console.log(defaultFlat.call(obj)) // Object { list: Array ['foo', 'bar'] }
+console.log(defaultUnwrap.call(obj)) // Object { list: Array ['foo', 'bar'] }
 ```
 
-- In any other case, it returns a flat object.
+- In any other case, it returns a unwrap object.
 
 ```typescript
 class Foo<T> {
@@ -167,25 +167,25 @@ class Foo<T> {
 	}
 }
 
-console.log(defaultFlat.call(new Foo('foo'))) // Object { value: 'foo' }
+console.log(defaultUnwrap.call(new Foo('foo'))) // Object { value: 'foo' }
 
 const obj = { foo: new Foo('foo') }
 
-console.log(defaultFlat.call(obj)) // Object { foo: Object { value: 'foo' } }
+console.log(defaultUnwrap.call(obj)) // Object { foo: Object { value: 'foo' } }
 ```
 
 ## Implementations
 
 ### Interface
 
-Interface that defines how to implement the flat method. See [definition](#definition).
+Interface that defines how to implement the unwrap method. See [definition](#definition).
 
 ```typescript
-import type { IFlat } from 'prtcl/interfaces'
+import type { IUnwrap } from 'prtcl/interfaces'
 
 type NotesData = string[]
 
-class Notes implements IFlat<string[]> {
+class Notes implements IUnwrap<string[]> {
 	notes: string[] = []
 
 	add(note: string) {
@@ -196,7 +196,7 @@ class Notes implements IFlat<string[]> {
 		notes = notes.filter((n) => note === n)
 	}
 
-	[Prtcl.toFlat]() {
+	[Prtcl.toUnwrap]() {
 		return this.notes
 	}
 }
@@ -204,12 +204,12 @@ class Notes implements IFlat<string[]> {
 
 ### Abstract Class
 
-Abstract Class that defines how to implement the flat method.
+Abstract Class that defines how to implement the unwrap method.
 
 ```typescript
-import type { Flateable } from 'prtcl/classes'
+import type { Unwrapeable } from 'prtcl/classes'
 
-class Notes implements Flateable<string[]> {
+class Notes implements Unwrapeable<string[]> {
 	notes: string[] = []
 
 	add(note: string) {
@@ -220,7 +220,7 @@ class Notes implements Flateable<string[]> {
 		notes = notes.filter((n) => note === n)
 	}
 
-	[Prtcl.toFlat]() {
+	[Prtcl.toUnwrap]() {
 		return this.notes
 	}
 }
@@ -228,12 +228,12 @@ class Notes implements Flateable<string[]> {
 
 ### Base Class
 
-Class with a basic implementation of the flat method. Uses the [defaultFlat](#default-method) internally.
+Class with a basic implementation of the unwrap method. Uses the [defaultUnwrap](#default-method) internally.
 
 ```typescript
-import { BaseFlateable } from 'prtcl/classes'
+import { BaseUnwrapeable } from 'prtcl/classes'
 
-class Notes implements BaseFlateable {
+class Notes implements BaseUnwrapeable {
 	notes: string[] = []
 
 	add(note: string) {
@@ -248,14 +248,14 @@ class Notes implements BaseFlateable {
 
 ### Class Decorator
 
-Class decorator that receives a function to define how to flat the object.
+Class decorator that receives a function to define how to unwrap the object.
 
 This implementation does not provide typing over the method.
 
 ```typescript
-import { flatBy } from 'prtcl/decorators'
+import { unwrapBy } from 'prtcl/decorators'
 
-@flatBy((instance) => instance.notes)
+@unwrapBy((instance) => instance.notes)
 class Notes {
 	notes: string[] = []
 
@@ -271,12 +271,12 @@ class Notes {
 
 ### Method decorator
 
-Method decorator that uses the method as the value of `Prtcl.toFlat`.
+Method decorator that uses the method as the value of `Prtcl.toUnwrap`.
 
 This implementation does not provide typing over the method.
 
 ```typescript
-import { useToFlat } from 'prtcl/decorators'
+import { useToUnwrap } from 'prtcl/decorators'
 
 class Notes {
 	notes: string[] = []
@@ -289,8 +289,8 @@ class Notes {
 		notes = notes.filter((n) => note === n)
 	}
 
-	@useToFlat
-	customFlat() {
+	@useToUnwrap
+	customUnwrap() {
 		return this.notes
 	}
 }

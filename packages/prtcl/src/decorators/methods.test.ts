@@ -1,6 +1,6 @@
 import { assert, assertEquals, assertInstanceOf } from '@std/assert'
 import { describe, test } from '@std/testing/bdd'
-import { useCompareTo, useEqualsTo, useToClone, useToFlat, useToMutableClone, useToReadonlyClone } from './methods.ts'
+import { useCompareTo, useEqualsTo, useToClone, useToMutableClone, useToReadonlyClone, useToUnwrap } from './methods.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 import type * as Extend from '../extend.ts'
 
@@ -83,32 +83,6 @@ describe('useEqualsTo decorator', () => {
 		type FooEqualsTO = Extend.Equals<Foo<string>>
 
 		assert((foo as FooEqualsTO)[Prtcl.equalsTo](otherFoo))
-	})
-})
-
-describe('useToUnwrap decorator', () => {
-	class Foo<T> {
-		value: T
-		constructor(value: T) {
-			this.value = value
-		}
-
-		@useToFlat
-		toUnwrap() {
-			return this.value
-		}
-	}
-
-	const foo = new Foo('foo')
-
-	test('Should return true if foo implements unwrap protocol', () => {
-		assert(Prtcl.impl('flat', foo))
-	})
-
-	test('Should return unwrap data of foo', () => {
-		type FooToFlat = Extend.Flat<Foo<string>, string>
-
-		assertEquals((foo as FooToFlat)[Prtcl.toFlat](), 'foo')
 	})
 })
 
@@ -251,5 +225,31 @@ describe('useToReadonly decorator', () => {
 
 		assertInstanceOf(readonlyCopyList, ReadonlyList)
 		assertEquals(readonlyList, readonlyCopyList)
+	})
+})
+
+describe('useToUnwrap decorator', () => {
+	class Foo<T> {
+		value: T
+		constructor(value: T) {
+			this.value = value
+		}
+
+		@useToUnwrap
+		toUnwrap() {
+			return this.value
+		}
+	}
+
+	const foo = new Foo('foo')
+
+	test('Should return true if foo implements unwrap protocol', () => {
+		assert(Prtcl.impl('unwrap', foo))
+	})
+
+	test('Should return unwrap data of foo', () => {
+		type FooToUnwrap = Extend.Unwrap<Foo<string>, string>
+
+		assertEquals((foo as FooToUnwrap)[Prtcl.toUnwrap](), 'foo')
 	})
 })

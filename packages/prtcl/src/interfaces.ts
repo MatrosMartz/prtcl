@@ -5,7 +5,7 @@
  */
 
 import type * as Prtcl from './prtcl/mod.ts'
-import type { CloneHint, FlatData } from './types.ts'
+import type { CloneHint, UnwrapData } from './types.ts'
 import type {
 	// deno-lint-ignore no-unused-vars
 	BaseClonable,
@@ -96,31 +96,6 @@ export interface IEquals {
 
 /**
 
-* Ensures that the `Prtcl.toFlat` method is correctly implements.
-* @template Data The return type of `Prtcl.toFlat` method.
-* @example
-* ```typescript
-
-* class Foo implements IFlat<number> {
-* #value = Math.random();
-*
-* [Prtcl.toFlat]() {
-*     return this.#value;
-* }
-* }
-*
-* const foo = new Foo();
-* const fooFlated = Serializer.flat(foo); // Call inside the Prtcl.toFlat method.
-* ```
-
-* @see {@link Prtcl.toFlat} for see more information about the method.
- */
-export interface IFlat<Data extends FlatData> {
-	[Prtcl.toFlat](): Data
-}
-
-/**
-
 * Ensures that the `Prtcl.toMutable` method is correctly implements.
 * @template MutableFoo The return type of `Prtcl.toMutable` method.
 * @example
@@ -193,6 +168,31 @@ export interface IMutableClone<MutableClone> {
  */
 export interface IReadonlyClone<ReadonlyClone> {
 	[Prtcl.toReadonlyClone](hint: CloneHint): ReadonlyClone
+}
+
+/**
+
+* Ensures that the `Prtcl.toUnwrap` method is correctly implements.
+* @template Data The return type of `Prtcl.toUnwrap` method.
+* @example
+* ```typescript
+
+* class Foo implements IUnwrap<number> {
+* #value = Math.random();
+*
+* [Prtcl.toUnwrap]() {
+*     return this.#value;
+* }
+* }
+*
+* const foo = new Foo();
+* const fooUnwraped = Serializer.unwrap(foo); // Call inside the Prtcl.toUnwrap method.
+* ```
+
+* @see {@link Prtcl.toUnwrap} for see more information about the method.
+ */
+export interface IUnwrap<Data extends UnwrapData> {
+	[Prtcl.toUnwrap](): Data
 }
 
 // TODO: export interface ISerialize {

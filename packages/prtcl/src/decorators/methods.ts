@@ -67,20 +67,6 @@ export function useEqualsTo(value: (other: unknown) => boolean, ctx: DecoratorCo
 
 /**
 
-* Use the method that to passed as `Prtcl.toFlat` method.
-* @param target The method that returns it's flat data.
-* @param ctx The decorator context.
- */
-export function useToFlat(target: () => unknown, ctx: DecoratorContext): void {
-	checkIfIsFunction(target, 'flat')
-
-	ctx.addInitializer(function () {
-		Object.defineProperty(this, Prtcl.toFlat, { value: target })
-	})
-}
-
-/**
-
 * Use the method that to passed as `Prtcl.toMutable` method.
 * @param target The method that returns it's mutable copy.
 * @param ctx The decorator context.
@@ -104,5 +90,19 @@ export function useToReadonlyClone(target: () => unknown, ctx: DecoratorContext)
 
 	ctx.addInitializer(function () {
 		Object.defineProperty(this, Prtcl.toReadonlyClone, { value: target })
+	})
+}
+
+/**
+
+* Use the method that to passed as `Prtcl.toUnwrap` method.
+* @param target The method that returns it's unwrap data.
+* @param ctx The decorator context.
+ */
+export function useToUnwrap(target: () => unknown, ctx: DecoratorContext): void {
+	checkIfIsFunction(target, 'unwrap')
+
+	ctx.addInitializer(function () {
+		Object.defineProperty(this, Prtcl.toUnwrap, { value: target })
 	})
 }

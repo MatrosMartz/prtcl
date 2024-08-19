@@ -63,25 +63,6 @@ export const equalsTo = Symbol.for('Prtcl.equalsTo')
 
 /**
 
-* A method that returns the internal flat data of the object.
-* @example
-* ```typescript
-
-* const foo = {
-* date: new Date(),
-* [Prtcl.toFlat]() {
-*     return { date: JSON.stringify(this.date) };
-* }
-* };
-*
-* Serializer.flat(foo); // Call inside the Prtcl.toFlat method.
-* ```
-
- */
-export const toFlat = Symbol.for('toFlat')
-
-/**
-
 * A mathod that returns the a writable copy of the readonly object.
 * @example
 * ```typescript
@@ -117,6 +98,23 @@ export const toMutableClone = Symbol.for('Prtcl.toMutableClone')
 
  */
 export const toReadonlyClone = Symbol.for('Prtcl.toReadonlyClone')
+
+/**
+ * A method that returns the internal unwrap data of the object.
+ * @example
+
+ * ```typescript
+ * const foo = {
+ * date: new Date(),
+ * [Prtcl.toUnwrap]() {
+ *     return { date: JSON.stringify(this.date) };
+ * }
+ * };
+ *
+ * Serializer.unwrap(foo); // Call inside the Prtcl.toUnwrap method.
+ * ```
+ */
+export const toUnwrap = Symbol.for('toUnwrap')
 
 /**
 

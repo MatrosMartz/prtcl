@@ -8,16 +8,16 @@ import {
 	defaultClone,
 	defaultCompare,
 	defaultEquals,
-	defaultFlat,
 	defaultMutableClone,
 	defaultReadonlyClone,
+	defaultUnwrap,
 } from '../methods.ts'
 import * as Prtcl from '../prtcl/mod.ts'
 // deno-lint-ignore no-unused-vars
 import type { IClone, ICompare, IEquals, IMutableClone, IReadonlyClone } from '../interfaces.ts'
 import type { IToPrimitive, Primitives, ToPrimitiveHint } from '../native/mod.ts'
-import type { FlatData, Mutable } from '../types.ts'
-import { Clonable, Comparable, Equatable, Flateable, MutableClonable, ReadonlyClonable } from './classes.ts'
+import type { Mutable, UnwrapData } from '../types.ts'
+import { Clonable, Comparable, Equatable, MutableClonable, ReadonlyClonable, Unwrapeable } from './classes.ts'
 
 /**
 
@@ -120,35 +120,6 @@ export abstract class BaseEquatable extends Equatable {
 
 /**
 
-* Basic implementation of the `Prtcl.toFlat` method.
-* Use `JSON.parse(JSON.stringify(this))` internally.
-*
-* @example
-* ````typescript
-
-* class Foo extends BaseFlateable {
-* value: string;
-*
-* constructor(value: string) {
-*     this.value = value;
-* }
-* }
-*
-* const foo = new Foo('foo');
-* const fooFlated = Serialize.flat(foo); // Call inside the Prtcl.toFlat method.
-* ```
-
-* If the class does not meet your needs, create your own implementation.
-* @see {@link Flateable} for an abstract class with no default implementation.
-* @see {@link IFlat} for an interface to ensure the implementation.
-* @see {@link defaultFlat} for the method used internally.
- */
-export abstract class BaseFlateable<Data extends FlatData> extends Flateable<Data> {
-	[Prtcl.toFlat] = defaultFlat as () => Data
-}
-
-/**
-
 * Basic implementation of the `Prtcl.toMutable` method.
 * Use simple Spread syntax for shallow copy.
 * @example
@@ -206,4 +177,33 @@ export abstract class BaseMutableClonable extends MutableClonable<Mutable<BaseMu
  */
 export abstract class BaseReadonlyClonable extends ReadonlyClonable<Readonly<BaseReadonlyClonable>> {
 	[Prtcl.toReadonlyClone] = defaultReadonlyClone
+}
+
+/**
+
+* Basic implementation of the `Prtcl.toUnwrap` method.
+* Use `JSON.parse(JSON.stringify(this))` internally.
+*
+* @example
+* ````typescript
+
+* class Foo extends BaseUnwrapeable {
+* value: string;
+*
+* constructor(value: string) {
+*     this.value = value;
+* }
+* }
+*
+* const foo = new Foo('foo');
+* const fooUnwraped = Serialize.unwrap(foo); // Call inside the Prtcl.toUnwrap method.
+* ```
+
+* If the class does not meet your needs, create your own implementation.
+* @see {@link Unwrapeable} for an abstract class with no default implementation.
+* @see {@link IUnwrap} for an interface to ensure the implementation.
+* @see {@link defaultUnwrap} for the method used internally.
+ */
+export abstract class BaseUnwrapeable<Data extends UnwrapData> extends Unwrapeable<Data> {
+	[Prtcl.toUnwrap] = defaultUnwrap as () => Data
 }
