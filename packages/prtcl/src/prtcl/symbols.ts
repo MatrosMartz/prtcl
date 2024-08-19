@@ -14,7 +14,7 @@
  *   }
  * };
  *
- * const bar = Copy.clone(foo); // Call inside the Prtcl.cloneThis method.
+ * const bar = Copy.clone(foo); // Call inside the Prtcl.toClone method.
  * ```
  */
 export const toClone = Symbol.for('Prtcl.toClone')

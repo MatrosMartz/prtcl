@@ -19,8 +19,8 @@ import type {
 } from './classes/mod.ts'
 
 /**
- * Ensures that the `Prtcl.cloneThis` method is correctly implements.
- * @template Clone The return type of `Prtcl.cloneThis` method.
+ * Ensures that the `Prtcl.toClone` method is correctly implements.toClone
+ * @template Clone The return type of `Prtcl.toClone` method.
  * @example
  * ```typescript
  * class Foo implements IClone<Foo> {
@@ -30,7 +30,7 @@ import type {
  * }
  *
  * const foo = new Foo();
- * const bar = Copy.clone(foo); // Call inside the Prtcl.cloneThis method.
+ * const bar = Copy.clone(foo); // Call inside the Prtcl.toClone method.
  * ```
  * @see {@link toClone} for see more information about the method.
  * @see {@link BaseClonable} for basic implementation.

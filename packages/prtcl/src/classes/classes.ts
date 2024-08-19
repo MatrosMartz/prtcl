@@ -22,8 +22,8 @@ import type {
 } from './base-classes.ts'
 
 /**
- * Ensures implementation of the `Prtcl.cloneThis` method.
- * @template Clone The return type of `Prtcl.cloneThis` method.
+ * Ensures implementation of the `Prtcl.toClone` method.
+ * @template Clone The return type of `Prtcl.toClone` method.
  * @example
  * ```typescript
  * class Foo extends Clonable<Foo> {

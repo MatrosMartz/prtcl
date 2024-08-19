@@ -19,11 +19,11 @@ import type { Mutable, UnwrapData } from '../types.ts'
 import { Clonable, Comparable, Equatable, MutableClonable, ReadonlyClonable, Unwrapeable } from './classes.ts'
 
 /**
- * Basic implementation of the `Prtcl.cloneThis` method.
+ * Basic implementation of the `Prtcl.toClone` method.
  *
  * Clones only the public properties of the object.
  * Use a Shallow copy.
- * @template Clone The return type of `Prtcl.cloneThis` method.
+ * @template Clone The return type of `Prtcl.toClone` method.
  * @example
  * ```typescriptPrtcl.
  * class Foo extends BaseClonable {
