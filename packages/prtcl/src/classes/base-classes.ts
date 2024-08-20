@@ -165,7 +165,6 @@ export abstract class BaseReadonlyClonable extends ReadonlyClonable<Readonly<Bas
 
 /**
  * Basic implementation of the `Prtcl.toUnwrap` method.
- * Use `JSON.parse(JSON.stringify(this))` internally.
  *
  * @example
  * ````typescript

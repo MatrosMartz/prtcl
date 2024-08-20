@@ -26,12 +26,8 @@
 
 <!--toc:end-->
 
-Prtcl derives from the abbreviation of the word protocol, very subtly inspired by the tc39 proposal
-[First-Class Protocols](https://github.com/tc39/proposal-first-class-protocols). This module is the core of the Prtcl
-library, and export various symbols to use as keys to define internal methods.
-
-It is intended to be implemented by other members of the Prtcl library; however, if the rest of the library does not
-suit your tastes, you are welcome to create your own implementation of these methods.
+This module provides a set of symbols within the `Prtcl` object, for the definition of methods such as `clone` and
+`equals`. Its purpose is to be implemented in conjunction with another library that uses them inside.
 
 ## Quick Start
 
