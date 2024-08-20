@@ -8,7 +8,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    if: github.repository === 'MatrosMartz/prtcl'
+    if: github.repository == 'MatrosMartz/prtcl'
     permissions:
       contents: read
       id-token: write
